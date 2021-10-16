@@ -5,16 +5,6 @@
 // Journal of Official Statistics, 6(1), 3-33.
 
 fn stl(y: &[f32], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isdeg: i32, itdeg: i32, ildeg: i32, nsjump: usize, ntjump: usize, nljump: usize, ni: usize, no: usize, rw: &mut [f32], season: &mut [f32], trend: &mut [f32]) {
-    let mut work1 = vec![0.0; n + 2 * np];
-    let mut work2 = vec![0.0; n + 2 * np];
-    let mut work3 = vec![0.0; n + 2 * np];
-    let mut work4 = vec![0.0; n + 2 * np];
-    let mut work5 = vec![0.0; n + 2 * np];
-
-    let mut userw = false;
-    let mut k = 0;
-
-    // TODO add messages
     assert!(ns >= 3);
     assert!(nt >= 3);
     assert!(nl >= 3);
@@ -27,6 +17,15 @@ fn stl(y: &[f32], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isdeg: i
     assert!(ns % 2 == 1);
     assert!(nt % 2 == 1);
     assert!(nl % 2 == 1);
+
+    let mut work1 = vec![0.0; n + 2 * np];
+    let mut work2 = vec![0.0; n + 2 * np];
+    let mut work3 = vec![0.0; n + 2 * np];
+    let mut work4 = vec![0.0; n + 2 * np];
+    let mut work5 = vec![0.0; n + 2 * np];
+
+    let mut userw = false;
+    let mut k = 0;
 
     loop {
         onestp(&y, n, np, ns, nt, nl, isdeg, itdeg, ildeg, nsjump, ntjump, nljump, ni, userw, rw, season, trend, &mut work1, &mut work2, &mut work3, &mut work4, &mut work5);
