@@ -406,6 +406,9 @@ impl StlParams {
 
     pub fn fit(&self, y: &[f32], np: usize) -> StlResult {
         let n = y.len();
+
+        assert!(n >= np * 2, "series has less than two periods");
+
         let ns = self.ns.unwrap_or(np);
 
         let isdeg = self.isdeg;
@@ -510,5 +513,12 @@ mod tests {
         assert_elements_in_delta(&[5.397365, 5.4745436, 5.5517216, 5.6499176, 5.748114], &result.trend()[..5]);
         assert_elements_in_delta(&[-0.5465884, 3.0460663, -1.7184906, 1.6089439, -6.5681853], &result.remainder()[..5]);
         assert_elements_in_delta(&[0.99374926, 0.8129377, 0.9385952, 0.9458036, 0.29742217], &result.weights()[..5]);
+    }
+
+    #[test]
+    #[should_panic(expected = "series has less than two periods")]
+    fn test_too_few_periods() {
+        let series = generate_series();
+        crate::params().fit(&series, 16);
     }
 }
