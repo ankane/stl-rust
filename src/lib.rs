@@ -496,8 +496,7 @@ mod tests {
 
     #[test]
     fn test_works() {
-        let series = generate_series();
-        let result = crate::params().fit(&series, 7);
+        let result = crate::params().fit(&generate_series(), 7);
         assert_elements_in_delta(&[0.36926576, 0.75655484, -1.3324139, 1.9553658, -0.6044802], &result.seasonal()[..5]);
         assert_elements_in_delta(&[4.804099, 4.9097075, 5.015316, 5.16045, 5.305584], &result.trend()[..5]);
         assert_elements_in_delta(&[-0.17336464, 3.3337379, -1.6829021, 1.8841844, -4.7011037], &result.remainder()[..5]);
@@ -506,8 +505,7 @@ mod tests {
 
     #[test]
     fn test_robust() {
-        let series = generate_series();
-        let result = crate::params().robust(true).fit(&series, 7);
+        let result = crate::params().robust(true).fit(&generate_series(), 7);
         assert_elements_in_delta(&[0.14922355, 0.47939026, -1.833231, 1.7411387, 0.8200711], &result.seasonal()[..5]);
         assert_elements_in_delta(&[5.397365, 5.4745436, 5.5517216, 5.6499176, 5.748114], &result.trend()[..5]);
         assert_elements_in_delta(&[-0.5465884, 3.0460663, -1.7184906, 1.6089439, -6.5681853], &result.remainder()[..5]);
@@ -517,14 +515,12 @@ mod tests {
     #[test]
     #[should_panic(expected = "series has less than two periods")]
     fn test_too_few_periods() {
-        let series = generate_series();
-        crate::params().fit(&series, 16);
+        crate::params().fit(&generate_series(), 16);
     }
 
     #[test]
     #[should_panic(expected = "seasonal_degree must be 0 or 1")]
     fn test_bad_seasonal_degree() {
-        let series = generate_series();
-        crate::params().seasonal_degree(2).fit(&series, 7);
+        crate::params().seasonal_degree(2).fit(&generate_series(), 7);
     }
 }
