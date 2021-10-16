@@ -5,18 +5,18 @@
 // Journal of Official Statistics, 6(1), 3-33.
 
 fn stl(y: &[f32], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isdeg: i32, itdeg: i32, ildeg: i32, nsjump: usize, ntjump: usize, nljump: usize, ni: usize, no: usize, rw: &mut [f32], season: &mut [f32], trend: &mut [f32]) {
-    assert!(ns >= 3);
-    assert!(nt >= 3);
-    assert!(nl >= 3);
-    assert!(np >= 2);
+    assert!(ns >= 3, "seasonal_length must be at least 3");
+    assert!(nt >= 3, "trend_length must be at least 3");
+    assert!(nl >= 3, "low_pass_length must be at least 3");
+    assert!(np >= 2, "period must be at least 2");
 
-    assert!(isdeg == 0 || isdeg == 1);
-    assert!(itdeg == 0 || itdeg == 1);
-    assert!(ildeg == 0 || ildeg == 1);
+    assert!(isdeg == 0 || isdeg == 1, "seasonal_degree must be 0 or 1");
+    assert!(itdeg == 0 || itdeg == 1, "trend_degree must be 0 or 1");
+    assert!(ildeg == 0 || ildeg == 1, "low_pass_degree must be 0 or 1");
 
-    assert!(ns % 2 == 1);
-    assert!(nt % 2 == 1);
-    assert!(nl % 2 == 1);
+    assert!(ns % 2 == 1, "seasonal_length must be odd");
+    assert!(nt % 2 == 1, "trend_length must be odd");
+    assert!(nl % 2 == 1, "low_pass_length must be odd");
 
     let mut work1 = vec![0.0; n + 2 * np];
     let mut work2 = vec![0.0; n + 2 * np];
@@ -519,5 +519,12 @@ mod tests {
     fn test_too_few_periods() {
         let series = generate_series();
         crate::params().fit(&series, 16);
+    }
+
+    #[test]
+    #[should_panic(expected = "seasonal_degree must be 0 or 1")]
+    fn test_bad_seasonal_degree() {
+        let series = generate_series();
+        crate::params().seasonal_degree(2).fit(&series, 7);
     }
 }
