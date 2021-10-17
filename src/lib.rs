@@ -4,9 +4,19 @@
 // STL: A Seasonal-Trend Decomposition Procedure Based on Loess.
 // Journal of Official Statistics, 6(1), 3-33.
 
+use std::fmt;
+
 #[derive(Debug)]
 pub enum Error {
     Parameter(String)
+}
+
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            Error::Parameter(ref err) => write!(f, "{}", err.as_str()),
+        }
+    }
 }
 
 fn stl(y: &[f32], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isdeg: i32, itdeg: i32, ildeg: i32, nsjump: usize, ntjump: usize, nljump: usize, ni: usize, no: usize, rw: &mut [f32], season: &mut [f32], trend: &mut [f32]) -> Result<(), Error> {
@@ -471,7 +481,7 @@ impl StlParams {
         let ntjump = self.ntjump.unwrap_or(((nt as f32) / 10.0).ceil() as usize);
         let nljump = self.nljump.unwrap_or(((nl as f32) / 10.0).ceil() as usize);
 
-        stl(y, n, newnp, newns, nt, nl, isdeg, itdeg, ildeg, nsjump, ntjump, nljump, ni, no, &mut rw, &mut season, &mut trend).map_err(|e| panic!("{:?}", e)).unwrap();
+        stl(y, n, newnp, newns, nt, nl, isdeg, itdeg, ildeg, nsjump, ntjump, nljump, ni, no, &mut rw, &mut season, &mut trend).map_err(|e| panic!("{}", e)).unwrap();
 
         let mut remainder = Vec::with_capacity(n);
         for i in 0..n {
