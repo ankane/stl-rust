@@ -108,7 +108,7 @@ impl StlParams {
         self.fit_result(y, np).unwrap_or_else(|e| panic!("{}", e))
     }
 
-    pub fn fit_result(&self, y: &[f32], np: usize) -> Result<StlResult, Error> {
+    fn fit_result(&self, y: &[f32], np: usize) -> Result<StlResult, Error> {
         let n = y.len();
 
         if n < np * 2 {

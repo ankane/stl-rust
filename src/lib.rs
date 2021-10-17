@@ -3,7 +3,7 @@ mod params;
 mod stl;
 
 pub use error::Error;
-pub use params::params;
+pub use params::{params, StlParams, StlResult};
 
 #[cfg(test)]
 mod tests {
