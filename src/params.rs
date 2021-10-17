@@ -1,3 +1,4 @@
+use crate::Error;
 use crate::stl::stl;
 
 #[derive(Debug)]
@@ -104,9 +105,15 @@ impl StlParams {
 
     // TODO return Result in 0.2.0
     pub fn fit(&self, y: &[f32], np: usize) -> StlResult {
+        self.fit_result(y, np).unwrap_or_else(|e| panic!("{}", e))
+    }
+
+    pub fn fit_result(&self, y: &[f32], np: usize) -> Result<StlResult, Error> {
         let n = y.len();
 
-        assert!(n >= np * 2, "series has less than two periods");
+        if n < np * 2 {
+            return Err(Error::Series("series has less than two periods".to_string()));
+        }
 
         let ns = self.ns.unwrap_or(np);
 
@@ -143,19 +150,52 @@ impl StlParams {
         let ntjump = self.ntjump.unwrap_or(((nt as f32) / 10.0).ceil() as usize);
         let nljump = self.nljump.unwrap_or(((nl as f32) / 10.0).ceil() as usize);
 
-        stl(y, n, newnp, newns, nt, nl, isdeg, itdeg, ildeg, nsjump, ntjump, nljump, ni, no, &mut rw, &mut season, &mut trend).map_err(|e| panic!("{}", e)).unwrap();
+        if newns < 3 {
+            return Err(Error::Parameter("seasonal_length must be at least 3".to_string()));
+        }
+        if nt < 3 {
+            return Err(Error::Parameter("trend_length must be at least 3".to_string()));
+        }
+        if nl < 3 {
+            return Err(Error::Parameter("low_pass_length must be at least 3".to_string()));
+        }
+        if newnp < 2 {
+            return Err(Error::Parameter("period must be at least 2".to_string()));
+        }
+
+        if isdeg != 0 && isdeg != 1 {
+            return Err(Error::Parameter("seasonal_degree must be 0 or 1".to_string()));
+        }
+        if itdeg != 0 && itdeg != 1 {
+            return Err(Error::Parameter("trend_degree must be 0 or 1".to_string()));
+        }
+        if ildeg != 0 && ildeg != 1 {
+            return Err(Error::Parameter("low_pass_degree must be 0 or 1".to_string()));
+        }
+
+        if newns % 2 != 1 {
+            return Err(Error::Parameter("seasonal_length must be odd".to_string()));
+        }
+        if nt % 2 != 1 {
+            return Err(Error::Parameter("trend_length must be odd".to_string()));
+        }
+        if nl % 2 != 1 {
+            return Err(Error::Parameter("low_pass_length must be odd".to_string()));
+        }
+
+        stl(y, n, newnp, newns, nt, nl, isdeg, itdeg, ildeg, nsjump, ntjump, nljump, ni, no, &mut rw, &mut season, &mut trend);
 
         let mut remainder = Vec::with_capacity(n);
         for i in 0..n {
             remainder.push(y[i] - season[i] - trend[i]);
         }
 
-        StlResult {
+        Ok(StlResult {
             seasonal: season,
             trend,
             remainder,
             weights: rw
-        }
+        })
     }
 }
 

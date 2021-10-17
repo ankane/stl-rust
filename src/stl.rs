@@ -4,42 +4,7 @@
 // STL: A Seasonal-Trend Decomposition Procedure Based on Loess.
 // Journal of Official Statistics, 6(1), 3-33.
 
-use crate::Error;
-
-pub fn stl(y: &[f32], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isdeg: i32, itdeg: i32, ildeg: i32, nsjump: usize, ntjump: usize, nljump: usize, ni: usize, no: usize, rw: &mut [f32], season: &mut [f32], trend: &mut [f32]) -> Result<(), Error> {
-    if ns < 3 {
-        return Err(Error::Parameter("seasonal_length must be at least 3".to_string()));
-    }
-    if nt < 3 {
-        return Err(Error::Parameter("trend_length must be at least 3".to_string()));
-    }
-    if nl < 3 {
-        return Err(Error::Parameter("low_pass_length must be at least 3".to_string()));
-    }
-    if np < 2 {
-        return Err(Error::Parameter("period must be at least 2".to_string()));
-    }
-
-    if isdeg != 0 && isdeg != 1 {
-        return Err(Error::Parameter("seasonal_degree must be 0 or 1".to_string()));
-    }
-    if itdeg != 0 && itdeg != 1 {
-        return Err(Error::Parameter("trend_degree must be 0 or 1".to_string()));
-    }
-    if ildeg != 0 && ildeg != 1 {
-        return Err(Error::Parameter("low_pass_degree must be 0 or 1".to_string()));
-    }
-
-    if ns % 2 != 1 {
-        return Err(Error::Parameter("seasonal_length must be odd".to_string()));
-    }
-    if nt % 2 != 1 {
-        return Err(Error::Parameter("trend_length must be odd".to_string()));
-    }
-    if nl % 2 != 1 {
-        return Err(Error::Parameter("low_pass_length must be odd".to_string()));
-    }
-
+pub fn stl(y: &[f32], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isdeg: i32, itdeg: i32, ildeg: i32, nsjump: usize, ntjump: usize, nljump: usize, ni: usize, no: usize, rw: &mut [f32], season: &mut [f32], trend: &mut [f32]) {
     let mut work1 = vec![0.0; n + 2 * np];
     let mut work2 = vec![0.0; n + 2 * np];
     let mut work3 = vec![0.0; n + 2 * np];
@@ -67,8 +32,6 @@ pub fn stl(y: &[f32], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isde
             rw[i] = 1.0;
         }
     }
-
-    Ok(())
 }
 
 fn ess(y: &[f32], n: usize, len: usize, ideg: i32, njump: usize, userw: bool, rw: &[f32], ys: &mut [f32], res: &mut [f32]) {
