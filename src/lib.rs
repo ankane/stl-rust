@@ -1,3 +1,7 @@
+//! Seasonal-trend decomposition for Rust
+//!
+//! [View the docs](https://github.com/ankane/stl-rust)
+
 mod error;
 mod params;
 mod stl;
