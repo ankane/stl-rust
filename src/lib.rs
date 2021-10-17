@@ -5,40 +5,42 @@
 // Journal of Official Statistics, 6(1), 3-33.
 
 #[derive(Debug)]
-pub struct Error(pub(crate) String);
+pub enum Error {
+    Parameter(String)
+}
 
 fn stl(y: &[f32], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isdeg: i32, itdeg: i32, ildeg: i32, nsjump: usize, ntjump: usize, nljump: usize, ni: usize, no: usize, rw: &mut [f32], season: &mut [f32], trend: &mut [f32]) -> Result<(), Error> {
     if ns < 3 {
-        return Err(Error("seasonal_length must be at least 3".to_string()));
+        return Err(Error::Parameter("seasonal_length must be at least 3".to_string()));
     }
     if nt < 3 {
-        return Err(Error("trend_length must be at least 3".to_string()));
+        return Err(Error::Parameter("trend_length must be at least 3".to_string()));
     }
     if nl < 3 {
-        return Err(Error("low_pass_length must be at least 3".to_string()));
+        return Err(Error::Parameter("low_pass_length must be at least 3".to_string()));
     }
     if np < 2 {
-        return Err(Error("period must be at least 2".to_string()));
+        return Err(Error::Parameter("period must be at least 2".to_string()));
     }
 
     if isdeg != 0 && isdeg != 1 {
-        return Err(Error("seasonal_degree must be 0 or 1".to_string()));
+        return Err(Error::Parameter("seasonal_degree must be 0 or 1".to_string()));
     }
     if itdeg != 0 && itdeg != 1 {
-        return Err(Error("trend_degree must be 0 or 1".to_string()));
+        return Err(Error::Parameter("trend_degree must be 0 or 1".to_string()));
     }
     if ildeg != 0 && ildeg != 1 {
-        return Err(Error("low_pass_degree must be 0 or 1".to_string()));
+        return Err(Error::Parameter("low_pass_degree must be 0 or 1".to_string()));
     }
 
     if ns % 2 != 1 {
-        return Err(Error("seasonal_length must be odd".to_string()));
+        return Err(Error::Parameter("seasonal_length must be odd".to_string()));
     }
     if nt % 2 != 1 {
-        return Err(Error("trend_length must be odd".to_string()));
+        return Err(Error::Parameter("trend_length must be odd".to_string()));
     }
     if nl % 2 != 1 {
-        return Err(Error("low_pass_length must be odd".to_string()));
+        return Err(Error::Parameter("low_pass_length must be odd".to_string()));
     }
 
     let mut work1 = vec![0.0; n + 2 * np];
@@ -469,7 +471,7 @@ impl StlParams {
         let ntjump = self.ntjump.unwrap_or(((nt as f32) / 10.0).ceil() as usize);
         let nljump = self.nljump.unwrap_or(((nl as f32) / 10.0).ceil() as usize);
 
-        stl(y, n, newnp, newns, nt, nl, isdeg, itdeg, ildeg, nsjump, ntjump, nljump, ni, no, &mut rw, &mut season, &mut trend).map_err(|e| panic!("{}", e.0)).unwrap();
+        stl(y, n, newnp, newns, nt, nl, isdeg, itdeg, ildeg, nsjump, ntjump, nljump, ni, no, &mut rw, &mut season, &mut trend).map_err(|e| panic!("{:?}", e)).unwrap();
 
         let mut remainder = Vec::with_capacity(n);
         for i in 0..n {
