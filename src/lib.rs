@@ -5,16 +5,22 @@
 mod error;
 mod params;
 mod stl;
+mod strength;
 
 pub use error::Error;
 pub use params::{params, StlParams, StlResult};
+pub use strength::{seasonal_strength, trend_strength};
 
 #[cfg(test)]
 mod tests {
+    fn assert_in_delta(exp: f32, act: f32) {
+        assert!((exp - act).abs() < 0.001);
+    }
+
     fn assert_elements_in_delta(exp: &[f32], act: &[f32]) {
         assert_eq!(exp.len(), act.len());
         for i in 0..exp.len() {
-            assert!((exp[i] - act[i]).abs() < 0.001);
+            assert_in_delta(exp[i], act[i]);
         }
     }
 
@@ -54,5 +60,31 @@ mod tests {
     #[should_panic(expected = "seasonal_degree must be 0 or 1")]
     fn test_bad_seasonal_degree() {
         crate::params().seasonal_degree(2).fit(&generate_series(), 7);
+    }
+
+    #[test]
+    fn test_seasonal_strength() {
+        let result = crate::params().fit(&generate_series(), 7);
+        assert_in_delta(0.284111676315015, crate::seasonal_strength(&result));
+    }
+
+    #[test]
+    fn test_seasonal_strength_max() {
+        let series = (0..30).map(|v| (v % 7) as f32).collect::<Vec<f32>>();
+        let result = crate::params().fit(&series, 7);
+        assert_in_delta(1.0, crate::seasonal_strength(&result));
+    }
+
+    #[test]
+    fn test_trend_strength() {
+        let result = crate::params().fit(&generate_series(), 7);
+        assert_in_delta(0.16384245231864702, crate::trend_strength(&result));
+    }
+
+    #[test]
+    fn test_trend_strength_max() {
+        let series = (0..30).map(|v| v as f32).collect::<Vec<f32>>();
+        let result = crate::params().fit(&series, 7);
+        assert_in_delta(1.0, crate::trend_strength(&result));
     }
 }

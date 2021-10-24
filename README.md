@@ -69,6 +69,20 @@ stlrs::params()
     .robust(false)          // if robustness iterations are to be used
 ```
 
+## Strength (unreleased)
+
+Get the seasonal strength
+
+```rust
+stlrs::seasonal_strength(&res);
+```
+
+Get the trend strength
+
+```rust
+stlrs::trend_strength(&res);
+```
+
 ## Credits
 
 This library was ported from the [Fortran implementation](https://www.netlib.org/a/stl).
@@ -76,6 +90,7 @@ This library was ported from the [Fortran implementation](https://www.netlib.org
 ## References
 
 - [STL: A Seasonal-Trend Decomposition Procedure Based on Loess](https://www.scb.se/contentassets/ca21efb41fee47d293bbee5bf7be7fb3/stl-a-seasonal-trend-decomposition-procedure-based-on-loess.pdf)
+- [Measuring strength of trend and seasonality](https://otexts.com/fpp2/seasonal-strength.html)
 
 ## History
 
