@@ -74,13 +74,13 @@ stlrs::params()
 Get the seasonal strength
 
 ```rust
-stlrs::seasonal_strength(&res);
+res.seasonal_strength();
 ```
 
 Get the trend strength
 
 ```rust
-stlrs::trend_strength(&res);
+res.trend_strength();
 ```
 
 ## Credits

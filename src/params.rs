@@ -199,6 +199,11 @@ impl StlParams {
     }
 }
 
+fn var(series: &[f32]) -> f32 {
+    let mean = series.iter().sum::<f32>() / series.len() as f32;
+    series.iter().map(|v| (v - mean).powf(2.0)).sum::<f32>() / (series.len() as f32 - 1.0)
+}
+
 impl StlResult {
     pub fn seasonal(&self) -> &Vec<f32> {
         &self.seasonal
@@ -214,5 +219,15 @@ impl StlResult {
 
     pub fn weights(&self) -> &Vec<f32> {
         &self.weights
+    }
+
+    pub fn seasonal_strength(&self) -> f32 {
+        let sr = self.seasonal().iter().zip(self.remainder()).map(|(a, b)| a + b).collect::<Vec<f32>>();
+        (1.0 - var(self.remainder()) / var(&sr)).max(0.0)
+    }
+
+    pub fn trend_strength(&self) -> f32 {
+        let tr = self.trend().iter().zip(self.remainder()).map(|(a, b)| a + b).collect::<Vec<f32>>();
+        (1.0 - var(self.remainder()) / var(&tr)).max(0.0)
     }
 }
