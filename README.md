@@ -9,7 +9,7 @@ Seasonal-trend decomposition for Rust
 Add this line to your application’s `Cargo.toml` under `[dependencies]`:
 
 ```toml
-stlrs = "0.1"
+stlrs = "0.2"
 ```
 
 ## Getting Started
@@ -69,7 +69,7 @@ stlrs::params()
     .robust(false)          // if robustness iterations are to be used
 ```
 
-## Strength (unreleased)
+## Strength
 
 Get the seasonal strength
 
