@@ -24,7 +24,7 @@ let series = vec![
 ];
 let period = 7; // period of the seasonal component
 
-let res = stlrs::params().fit(&series, period);
+let res = stlrs::params().fit(&series, period).unwrap();
 ```
 
 Get the components
@@ -40,7 +40,7 @@ res.remainder();
 Use robustness iterations
 
 ```rust
-let res = stlrs::params().robust(true).fit(&series, period);
+let res = stlrs::params().robust(true).fit(&series, period).unwrap();
 ```
 
 Get robustness weights

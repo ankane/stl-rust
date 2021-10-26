@@ -1,5 +1,6 @@
-## 0.1.1 (unreleased)
+## 0.2.0 (unreleased)
 
+- Changed `fit` to return `Result`
 - Added `seasonal_strength` and `trend_strength` functions
 - Added check for at least two periods
 
