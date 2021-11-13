@@ -238,8 +238,7 @@ fn rwts(y: &[f32], n: usize, fit: &[f32], rw: &mut [f32]) {
     let mid1 = (n - 1) / 2;
     let mid2 = n / 2;
 
-    // sort
-    rw.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    rw.sort_unstable_by(|a, b| a.partial_cmp(b).unwrap());
 
     let cmad = 3.0 * (rw[mid1] + rw[mid2]); // 6 * median abs resid
     let c9 = 0.999 * cmad;
