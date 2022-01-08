@@ -15,7 +15,7 @@ pub fn stl(y: &[f32], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isde
     let mut k = 0;
 
     loop {
-        onestp(&y, n, np, ns, nt, nl, isdeg, itdeg, ildeg, nsjump, ntjump, nljump, ni, userw, rw, season, trend, &mut work1, &mut work2, &mut work3, &mut work4, &mut work5);
+        onestp(y, n, np, ns, nt, nl, isdeg, itdeg, ildeg, nsjump, ntjump, nljump, ni, userw, rw, season, trend, &mut work1, &mut work2, &mut work3, &mut work4, &mut work5);
         k += 1;
         if k > no {
             break;
@@ -23,11 +23,11 @@ pub fn stl(y: &[f32], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isde
         for i in 0..n {
             work1[i] = trend[i] + season[i];
         }
-        rwts(y, n, &mut work1, rw);
+        rwts(y, n, &work1, rw);
         userw = true;
     }
 
-    if no <= 0 {
+    if no == 0 {
         for i in 0..n {
             rw[i] = 1.0;
         }
