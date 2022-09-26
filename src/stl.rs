@@ -76,7 +76,7 @@ fn ess(y: &[f32], n: usize, len: usize, ideg: i32, njump: usize, userw: bool, rw
             if i < nsh {
                 nleft = 1;
                 nright = len;
-            } else if i >= n - nsh + 1 {
+            } else if i > n - nsh {
                 nleft = n - len + 1;
                 nright = n;
             } else {
