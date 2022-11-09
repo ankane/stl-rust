@@ -1,5 +1,7 @@
+use num_traits::{Float, AsPrimitive};
+
 use crate::Error;
-use crate::stl::stl;
+use crate::stl::{Bound, stl};
 
 #[derive(Debug)]
 pub struct StlParams {
@@ -18,11 +20,11 @@ pub struct StlParams {
 }
 
 #[derive(Debug)]
-pub struct StlResult {
-    seasonal: Vec<f32>,
-    trend: Vec<f32>,
-    remainder: Vec<f32>,
-    weights: Vec<f32>
+pub struct StlResult<T: Float + 'static> {
+    seasonal: Vec<T>,
+    trend: Vec<T>,
+    remainder: Vec<T>,
+    weights: Vec<T>
 }
 
 pub fn params() -> StlParams {
@@ -103,7 +105,7 @@ impl StlParams {
         self
     }
 
-    pub fn fit(&self, y: &[f32], np: usize) -> Result<StlResult, Error> {
+    pub fn fit<T: Bound + 'static>(&self, y: &[T], np: usize) -> Result<StlResult<T>, Error> where usize: AsPrimitive<T> {
         let n = y.len();
 
         if n < np * 2 {
@@ -115,9 +117,9 @@ impl StlParams {
         let isdeg = self.isdeg;
         let itdeg = self.itdeg;
 
-        let mut rw = vec![0.0; n];
-        let mut season = vec![0.0; n];
-        let mut trend = vec![0.0; n];
+        let mut rw = vec![T::zero(); n];
+        let mut season = vec![T::zero(); n];
+        let mut trend = vec![T::zero(); n];
 
         let ildeg = self.ildeg.unwrap_or(itdeg);
         let mut newns = ns.max(3);
@@ -194,35 +196,35 @@ impl StlParams {
     }
 }
 
-fn var(series: &[f32]) -> f32 {
-    let mean = series.iter().sum::<f32>() / series.len() as f32;
-    series.iter().map(|v| (v - mean).powf(2.0)).sum::<f32>() / (series.len() as f32 - 1.0)
+fn var<T: Bound + std::iter::Sum<T> + 'static>(series: &[T]) -> T where usize: AsPrimitive<T> {
+    let mean = series.iter().copied().sum::<T>() / series.len().as_();
+    series.iter().map(|&v| (v - mean).powf(<T as From<f32>>::from(2.0))).sum::<T>() / (series.len().as_() - T::one())
 }
 
-impl StlResult {
-    pub fn seasonal(&self) -> &Vec<f32> {
+impl<T: Bound + std::iter::Sum<T>+ 'static> StlResult<T> where usize: AsPrimitive<T> {
+    pub fn seasonal(&self) -> &Vec<T> {
         &self.seasonal
     }
 
-    pub fn trend(&self) -> &Vec<f32> {
+    pub fn trend(&self) -> &Vec<T> {
         &self.trend
     }
 
-    pub fn remainder(&self) -> &Vec<f32> {
+    pub fn remainder(&self) -> &Vec<T> {
         &self.remainder
     }
 
-    pub fn weights(&self) -> &Vec<f32> {
+    pub fn weights(&self) -> &Vec<T> {
         &self.weights
     }
 
-    pub fn seasonal_strength(&self) -> f32 {
-        let sr = self.seasonal().iter().zip(self.remainder()).map(|(a, b)| a + b).collect::<Vec<f32>>();
-        (1.0 - var(self.remainder()) / var(&sr)).max(0.0)
+    pub fn seasonal_strength(&self) -> T {
+        let sr = self.seasonal().iter().zip(self.remainder()).map(|(&a, &b)| a + b).collect::<Vec<T>>();
+        (T::one() - var(self.remainder()) / var(&sr)).max(T::zero())
     }
 
-    pub fn trend_strength(&self) -> f32 {
-        let tr = self.trend().iter().zip(self.remainder()).map(|(a, b)| a + b).collect::<Vec<f32>>();
-        (1.0 - var(self.remainder()) / var(&tr)).max(0.0)
+    pub fn trend_strength(&self) -> T {
+        let tr = self.trend().iter().zip(self.remainder()).map(|(&a, &b)| a + b).collect::<Vec<T>>();
+        (T::one() - var(self.remainder()) / var(&tr)).max(T::zero())
     }
 }

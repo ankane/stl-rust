@@ -4,12 +4,19 @@
 // STL: A Seasonal-Trend Decomposition Procedure Based on Loess.
 // Journal of Official Statistics, 6(1), 3-33.
 
-pub fn stl(y: &[f32], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isdeg: i32, itdeg: i32, ildeg: i32, nsjump: usize, ntjump: usize, nljump: usize, ni: usize, no: usize, rw: &mut [f32], season: &mut [f32], trend: &mut [f32]) {
-    let mut work1 = vec![0.0; n + 2 * np];
-    let mut work2 = vec![0.0; n + 2 * np];
-    let mut work3 = vec![0.0; n + 2 * np];
-    let mut work4 = vec![0.0; n + 2 * np];
-    let mut work5 = vec![0.0; n + 2 * np];
+use std::ops::{AddAssign, Mul, MulAssign, DivAssign};
+
+use num_traits::{Float, AsPrimitive};
+
+pub trait Bound: Float + MulAssign + AddAssign + DivAssign + Mul + From<f32> {}
+impl<T> Bound for T where T: Float + MulAssign + AddAssign + DivAssign + Mul + From<f32> {}
+
+pub fn stl<T: Bound + 'static>(y: &[T], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isdeg: i32, itdeg: i32, ildeg: i32, nsjump: usize, ntjump: usize, nljump: usize, ni: usize, no: usize, rw: &mut [T], season: &mut [T], trend: &mut [T]) where usize: AsPrimitive<T> {
+    let mut work1 = vec![T::zero(); n + 2 * np];
+    let mut work2 = vec![T::zero(); n + 2 * np];
+    let mut work3 = vec![T::zero(); n + 2 * np];
+    let mut work4 = vec![T::zero(); n + 2 * np];
+    let mut work5 = vec![T::zero(); n + 2 * np];
 
     let mut userw = false;
     let mut k = 0;
@@ -29,12 +36,12 @@ pub fn stl(y: &[f32], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isde
 
     if no == 0 {
         for i in 0..n {
-            rw[i] = 1.0;
+            rw[i] = T::one();
         }
     }
 }
 
-fn ess(y: &[f32], n: usize, len: usize, ideg: i32, njump: usize, userw: bool, rw: &[f32], ys: &mut [f32], res: &mut [f32]) {
+fn ess<T: Bound + 'static>(y: &[T], n: usize, len: usize, ideg: i32, njump: usize, userw: bool, rw: &[T], ys: &mut [T], res: &mut [T]) where usize: AsPrimitive<T> {
     if n < 2 {
         ys[0] = y[0];
         return;
@@ -49,7 +56,7 @@ fn ess(y: &[f32], n: usize, len: usize, ideg: i32, njump: usize, userw: bool, rw
         nright = n;
         let mut i = 1;
         while i <= n {
-            let ok = est(y, n, len, ideg, i as f32, &mut ys[i - 1], nleft, nright, res, userw, rw);
+            let ok = est(y, n, len, ideg, i.as_(), &mut ys[i - 1], nleft, nright, res, userw, rw);
             if !ok {
                 ys[i - 1] = y[i - 1];
             }
@@ -64,7 +71,7 @@ fn ess(y: &[f32], n: usize, len: usize, ideg: i32, njump: usize, userw: bool, rw
                 nleft += 1;
                 nright += 1;
             }
-            let ok = est(y, n, len, ideg, i as f32, &mut ys[i - 1], nleft, nright, res, userw, rw);
+            let ok = est(y, n, len, ideg, i.as_(), &mut ys[i - 1], nleft, nright, res, userw, rw);
             if !ok {
                 ys[i - 1] = y[i - 1];
             }
@@ -83,7 +90,7 @@ fn ess(y: &[f32], n: usize, len: usize, ideg: i32, njump: usize, userw: bool, rw
                 nleft = i - nsh + 1;
                 nright = len + i - nsh;
             }
-            let ok = est(y, n, len, ideg, i as f32, &mut ys[i - 1], nleft, nright, res, userw, rw);
+            let ok = est(y, n, len, ideg, i.as_(), &mut ys[i - 1], nleft, nright, res, userw, rw);
             if !ok {
                 ys[i - 1] = y[i - 1];
             }
@@ -94,21 +101,21 @@ fn ess(y: &[f32], n: usize, len: usize, ideg: i32, njump: usize, userw: bool, rw
     if newnj != 1 {
         let mut i = 1;
         while i <= n - newnj {
-            let delta = (ys[i + newnj - 1] - ys[i - 1]) / (newnj as f32);
+            let delta = (ys[i + newnj - 1] - ys[i - 1]) / newnj.as_();
             for j in i + 1..=i + newnj - 1 {
-                ys[j - 1] = ys[i - 1] + delta * ((j - i) as f32);
+                ys[j - 1] = ys[i - 1] + delta * (j - i).as_();
             }
             i += newnj;
         }
         let k = ((n - 1) / newnj) * newnj + 1;
         if k != n {
-            let ok = est(y, n, len, ideg, n as f32, &mut ys[n - 1], nleft, nright, res, userw, rw);
+            let ok = est(y, n, len, ideg, n.as_(), &mut ys[n - 1], nleft, nright, res, userw, rw);
             if !ok {
                 ys[n - 1] = y[n - 1];
                 if k != n - 1 {
-                    let delta = (ys[n - 1] - ys[k - 1]) / ((n - k) as f32);
+                    let delta = (ys[n - 1] - ys[k - 1]) / (n - k).as_();
                     for j in k + 1..=n - 1 {
-                        ys[j - 1] = ys[k - 1] + delta * ((j - k) as f32);
+                        ys[j - 1] = ys[k - 1] + delta * (j - k).as_();
                     }
                 }
             }
@@ -116,27 +123,27 @@ fn ess(y: &[f32], n: usize, len: usize, ideg: i32, njump: usize, userw: bool, rw
     }
 }
 
-fn est(y: &[f32], n: usize, len: usize, ideg: i32, xs: f32, ys: &mut f32, nleft: usize, nright: usize, w: &mut [f32], userw: bool, rw: &[f32]) -> bool {
-    let range = (n as f32) - 1.0;
-    let mut h = (xs - (nleft as f32)).max((nright as f32) - xs);
+fn est<T: Bound + 'static>(y: &[T], n: usize, len: usize, ideg: i32, xs: T, ys: &mut T, nleft: usize, nright: usize, w: &mut [T], userw: bool, rw: &[T]) -> bool where usize: AsPrimitive<T> {
+    let range= n.as_() - T::one();
+    let mut h = (xs - nleft.as_()).max(nright.as_() - xs);
 
     if len > n {
-        h += ((len - n) / 2) as f32;
+        h += ((len - n) / 2).as_();
     }
 
-    let h9 = 0.999 * h;
-    let h1 = 0.001 * h;
+    let h9 = <T as From<f32>>::from(0.999) * h;
+    let h1 = <T as From<f32>>::from(0.001) * h;
 
     // compute weights
-    let mut a = 0.0;
+    let mut a = T::zero();
     for j in nleft..=nright {
-        w[j - 1] = 0.0;
-        let r = ((j as f32) - xs).abs();
+        w[j - 1] = T::zero();
+        let r = (j.as_() - xs).abs();
         if r <= h9 {
             if r <= h1 {
-                w[j - 1] = 1.0;
+                w[j - 1] = T::one();
             } else {
-                w[j - 1] = (1.0 - (r / h).powi(3)).powi(3);
+                w[j - 1] = (T::one() - (r / h).powi(3)).powi(3);
             }
             if userw {
                 w[j - 1] *= rw[j - 1];
@@ -145,34 +152,34 @@ fn est(y: &[f32], n: usize, len: usize, ideg: i32, xs: f32, ys: &mut f32, nleft:
         }
     }
 
-    if a <= 0.0 {
+    if a <= T::zero() {
         false
     } else { // weighted least squares
         for j in nleft..=nright { // make sum of w(j) == 1
             w[j - 1] /= a;
         }
 
-        if h > 0.0 && ideg > 0 { // use linear fit
-            let mut a = 0.0;
+        if h > T::zero() && ideg > 0 { // use linear fit
+            let mut a = T::zero();
             for j in nleft..=nright { // weighted center of x values
-                a += w[j - 1] * (j as f32);
+                a += w[j - 1] * j.as_();
             }
             let mut b = xs - a;
-            let mut c = 0.0;
+            let mut c = T::zero();
             for j in nleft..=nright {
-                c += w[j - 1] * ((j as f32) - a).powi(2);
+                c += w[j - 1] * (j.as_() - a).powi(2);
             }
-            if c.sqrt() > 0.001 * range {
+            if c.sqrt() > <T as From<f32>>::from(0.001) * range {
                 b /= c;
 
                 // points are spread out enough to compute slope
                 for j in nleft..=nright {
-                    w[j - 1] *= b * ((j as f32) - a) + 1.0;
+                    w[j - 1] *= b * (j.as_() - a) + 1.0.into();
                 }
             }
         }
 
-        *ys = 0.0;
+        *ys = 0.0.into();
         for j in nleft..=nright {
             *ys += w[j - 1] * y[j - 1];
         }
@@ -181,16 +188,16 @@ fn est(y: &[f32], n: usize, len: usize, ideg: i32, xs: f32, ys: &mut f32, nleft:
     }
 }
 
-fn fts(x: &[f32], n: usize, np: usize, trend: &mut [f32], work: &mut [f32]) {
+fn fts<T: Bound + 'static>(x: &[T], n: usize, np: usize, trend: &mut [T], work: &mut [T]) where usize: AsPrimitive<T> {
     ma(x, n, np, trend);
     ma(trend, n - np + 1, np, work);
     ma(work, n - 2 * np + 2, 3, trend);
 }
 
-fn ma(x: &[f32], n: usize, len: usize, ave: &mut [f32]) {
+fn ma<T: Bound + 'static>(x: &[T], n: usize, len: usize, ave: &mut [T]) where usize: AsPrimitive<T> {
     let newn = n - len + 1;
-    let flen = len as f32;
-    let mut v = 0.0;
+    let flen = len.as_();
+    let mut v = T::zero();
 
     // get the first average
     for i in 0..len {
@@ -211,7 +218,7 @@ fn ma(x: &[f32], n: usize, len: usize, ave: &mut [f32]) {
     }
 }
 
-fn onestp(y: &[f32], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isdeg: i32, itdeg: i32, ildeg: i32, nsjump: usize, ntjump: usize, nljump: usize, ni: usize, userw: bool, rw: &mut [f32], season: &mut [f32], trend: &mut [f32], work1: &mut [f32], work2: &mut [f32], work3: &mut [f32], work4: &mut [f32], work5: &mut [f32]) {
+fn onestp<T: Bound + 'static>(y: &[T], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isdeg: i32, itdeg: i32, ildeg: i32, nsjump: usize, ntjump: usize, nljump: usize, ni: usize, userw: bool, rw: &mut [T], season: &mut [T], trend: &mut [T], work1: &mut [T], work2: &mut [T], work3: &mut [T], work4: &mut [T], work5: &mut [T]) where usize: AsPrimitive<T> {
     for _ in 0..ni {
         for i in 0..n {
             work1[i] = y[i] - trend[i];
@@ -230,7 +237,7 @@ fn onestp(y: &[f32], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isdeg
     }
 }
 
-fn rwts(y: &[f32], n: usize, fit: &[f32], rw: &mut [f32]) {
+fn rwts<T: Bound>(y: &[T], n: usize, fit: &[T], rw: &mut [T]) {
     for i in 0..n {
         rw[i] = (y[i] - fit[i]).abs();
     }
@@ -240,23 +247,23 @@ fn rwts(y: &[f32], n: usize, fit: &[f32], rw: &mut [f32]) {
 
     rw.sort_unstable_by(|a, b| a.partial_cmp(b).unwrap());
 
-    let cmad = 3.0 * (rw[mid1] + rw[mid2]); // 6 * median abs resid
-    let c9 = 0.999 * cmad;
-    let c1 = 0.001 * cmad;
+    let cmad = <T as From<f32>>::from(3.0) * (rw[mid1] + rw[mid2]); // 6 * median abs resid
+    let c9 = <T as From<f32>>::from(0.999) * cmad;
+    let c1 = <T as From<f32>>::from(0.001) * cmad;
 
     for i in 0..n {
         let r = (y[i] - fit[i]).abs();
         if r <= c1 {
-            rw[i] = 1.0;
+            rw[i] = T::one();
         } else if r <= c9 {
-            rw[i] = (1.0 - (r / cmad).powi(2)).powi(2);
+            rw[i] = (T::one() - (r / cmad).powi(2)).powi(2);
         } else {
-            rw[i] = 0.0;
+            rw[i] = T::zero();
         }
     }
 }
 
-fn ss(y: &[f32], n: usize, np: usize, ns: usize, isdeg: i32, nsjump: usize, userw: bool, rw: &[f32], season: &mut [f32], work1: &mut [f32], work2: &mut [f32], work3: &mut [f32], work4: &mut [f32]) {
+fn ss<T: Bound + 'static>(y: &[T], n: usize, np: usize, ns: usize, isdeg: i32, nsjump: usize, userw: bool, rw: &[T], season: &mut [T], work1: &mut [T], work2: &mut [T], work3: &mut [T], work4: &mut [T]) where usize: AsPrimitive<T> {
     for j in 1..=np {
         let k = (n - j) / np + 1;
 
@@ -269,13 +276,13 @@ fn ss(y: &[f32], n: usize, np: usize, ns: usize, isdeg: i32, nsjump: usize, user
             }
         }
         ess(work1, k, ns, isdeg, nsjump, userw, work3, &mut work2[1..], work4);
-        let mut xs = 0.0;
+        let mut xs = T::zero();
         let nright = ns.min(k);
         let ok = est(work1, k, ns, isdeg, xs, &mut work2[0], 1, nright, work4, userw, work3);
         if !ok {
             work2[0] = work2[1];
         }
-        xs = (k + 1) as f32;
+        xs = (k + 1).as_();
         let nleft = 1.max(k as i32 - ns as i32 + 1) as usize;
         let ok = est(work1, k, ns, isdeg, xs, &mut work2[k + 1], nleft, k, work4, userw, work3);
         if !ok {
