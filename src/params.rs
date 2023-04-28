@@ -204,19 +204,19 @@ fn var<F: Float+std::iter::Sum>(series: &[F]) -> F {
 }
 
 impl<F: Float> StlResult<F> {
-    pub fn seasonal(&self) -> &Vec<F> {
+    pub fn seasonal(&self) -> &[F] {
         &self.seasonal
     }
 
-    pub fn trend(&self) -> &Vec<F> {
+    pub fn trend(&self) -> &[F] {
         &self.trend
     }
 
-    pub fn remainder(&self) -> &Vec<F> {
+    pub fn remainder(&self) -> &[F] {
         &self.remainder
     }
 
-    pub fn weights(&self) -> &Vec<F> {
+    pub fn weights(&self) -> &[F] {
         &self.weights
     }
 
