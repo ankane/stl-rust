@@ -199,13 +199,11 @@ fn ma(x: &[f32], n: usize, len: usize, ave: &mut [f32]) {
     ave[0] = v / flen;
     if newn > 1 {
         let mut k = len;
-        let mut m = 0;
-        for j in 1..newn {
+        for (m, aj) in ave.iter_mut().take(newn).skip(1).enumerate() {
             // window down the array
             v = v - x[m] + x[k];
-            ave[j] = v / flen;
+            *aj = v / flen;
             k += 1;
-            m += 1;
         }
     }
 }
