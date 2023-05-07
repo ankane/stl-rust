@@ -195,8 +195,8 @@ fn ma(x: &[f32], n: usize, len: usize, ave: &mut [f32]) {
 
     // get the first average
     let mut v: f32 = x.iter().take(len).sum();
-
     ave[0] = v / flen;
+
     if newn > 1 {
         let mut k = len;
         for (m, aj) in ave.iter_mut().take(newn).skip(1).enumerate() {
