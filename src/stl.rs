@@ -4,6 +4,8 @@
 // STL: A Seasonal-Trend Decomposition Procedure Based on Loess.
 // Journal of Official Statistics, 6(1), 3-33.
 
+#![allow(clippy::too_many_arguments)]
+
 pub fn stl(y: &[f32], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isdeg: i32, itdeg: i32, ildeg: i32, nsjump: usize, ntjump: usize, nljump: usize, ni: usize, no: usize, rw: &mut [f32], season: &mut [f32], trend: &mut [f32]) {
     let mut work1 = vec![0.0; n + 2 * np];
     let mut work2 = vec![0.0; n + 2 * np];
@@ -28,8 +30,8 @@ pub fn stl(y: &[f32], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isde
     }
 
     if no == 0 {
-        for i in 0..n {
-            rw[i] = 1.0;
+        for v in rw.iter_mut() {
+            *v = 1.0;
         }
     }
 }
@@ -190,12 +192,9 @@ fn fts(x: &[f32], n: usize, np: usize, trend: &mut [f32], work: &mut [f32]) {
 fn ma(x: &[f32], n: usize, len: usize, ave: &mut [f32]) {
     let newn = n - len + 1;
     let flen = len as f32;
-    let mut v = 0.0;
 
     // get the first average
-    for i in 0..len {
-        v += x[i];
-    }
+    let mut v: f32 = x.iter().take(len).sum();
 
     ave[0] = v / flen;
     if newn > 1 {
