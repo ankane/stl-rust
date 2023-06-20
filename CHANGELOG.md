@@ -1,3 +1,7 @@
+## 0.3.0 (unreleased)
+
+- Changed `StlResult` methods to return slices
+
 ## 0.2.2 (2023-06-20)
 
 - Fixed bug when jump > 1
