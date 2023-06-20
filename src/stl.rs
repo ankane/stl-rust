@@ -107,11 +107,11 @@ fn ess(y: &[f32], n: usize, len: usize, ideg: i32, njump: usize, userw: bool, rw
             let ok = est(y, n, len, ideg, n as f32, &mut ys[n - 1], nleft, nright, res, userw, rw);
             if !ok {
                 ys[n - 1] = y[n - 1];
-                if k != n - 1 {
-                    let delta = (ys[n - 1] - ys[k - 1]) / ((n - k) as f32);
-                    for j in k + 1..=n - 1 {
-                        ys[j - 1] = ys[k - 1] + delta * ((j - k) as f32);
-                    }
+            }
+            if k != n - 1 {
+                let delta = (ys[n - 1] - ys[k - 1]) / ((n - k) as f32);
+                for j in k + 1..=n - 1 {
+                    ys[j - 1] = ys[k - 1] + delta * ((j - k) as f32);
                 }
             }
         }
