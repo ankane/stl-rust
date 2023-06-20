@@ -200,19 +200,19 @@ fn var(series: &[f32]) -> f32 {
 }
 
 impl StlResult {
-    pub fn seasonal(&self) -> &[f32] {
+    pub fn seasonal(&self) -> &Vec<f32> {
         &self.seasonal
     }
 
-    pub fn trend(&self) -> &[f32] {
+    pub fn trend(&self) -> &Vec<f32> {
         &self.trend
     }
 
-    pub fn remainder(&self) -> &[f32] {
+    pub fn remainder(&self) -> &Vec<f32> {
         &self.remainder
     }
 
-    pub fn weights(&self) -> &[f32] {
+    pub fn weights(&self) -> &Vec<f32> {
         &self.weights
     }
 

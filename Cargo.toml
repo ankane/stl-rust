@@ -5,8 +5,7 @@ description = "Seasonal-trend decomposition for Rust"
 repository = "https://github.com/ankane/stl-rust"
 license = "Unlicense OR MIT"
 authors = ["Andrew Kane <andrew@ankane.org>"]
-edition = "2021"
-rust-version = "1.56.0"
+edition = "2018"
 readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
