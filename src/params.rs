@@ -19,10 +19,10 @@ pub struct StlParams {
 
 #[derive(Debug)]
 pub struct StlResult {
-    seasonal: Vec<f32>,
-    trend: Vec<f32>,
-    remainder: Vec<f32>,
-    weights: Vec<f32>
+    pub seasonal: Vec<f32>,
+    pub trend: Vec<f32>,
+    pub remainder: Vec<f32>,
+    pub weights: Vec<f32>
 }
 
 pub fn params() -> StlParams {
