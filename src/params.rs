@@ -1,7 +1,7 @@
 use crate::Error;
 use crate::stl::stl;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct StlParams {
     ns: Option<usize>,
     nt: Option<usize>,
@@ -17,7 +17,7 @@ pub struct StlParams {
     robust: bool
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct StlResult {
     seasonal: Vec<f32>,
     trend: Vec<f32>,
