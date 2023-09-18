@@ -26,23 +26,27 @@ pub struct StlResult {
 }
 
 pub fn params() -> StlParams {
-    StlParams {
-        ns: None,
-        nt: None,
-        nl: None,
-        isdeg: 0,
-        itdeg: 1,
-        ildeg: None,
-        nsjump: None,
-        ntjump: None,
-        nljump: None,
-        ni: None,
-        no: None,
-        robust: false
-    }
+    StlParams::new()
 }
 
 impl StlParams {
+    pub fn new() -> Self {
+        Self {
+            ns: None,
+            nt: None,
+            nl: None,
+            isdeg: 0,
+            itdeg: 1,
+            ildeg: None,
+            nsjump: None,
+            ntjump: None,
+            nljump: None,
+            ni: None,
+            no: None,
+            robust: false
+        }
+    }
+
     pub fn seasonal_length(&mut self, ns: usize) -> &mut Self {
         self.ns = Some(ns);
         self
@@ -194,9 +198,10 @@ impl StlParams {
     }
 }
 
-fn var(series: &[f32]) -> f32 {
-    let mean = series.iter().sum::<f32>() / series.len() as f32;
-    series.iter().map(|v| (v - mean).powf(2.0)).sum::<f32>() / (series.len() as f32 - 1.0)
+impl Default for StlParams {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl StlResult {
@@ -218,11 +223,16 @@ impl StlResult {
 
     pub fn seasonal_strength(&self) -> f32 {
         let sr = self.seasonal().iter().zip(self.remainder()).map(|(a, b)| a + b).collect::<Vec<f32>>();
-        (1.0 - var(self.remainder()) / var(&sr)).max(0.0)
+        (1.0 - self.var(self.remainder()) / self.var(&sr)).max(0.0)
     }
 
     pub fn trend_strength(&self) -> f32 {
         let tr = self.trend().iter().zip(self.remainder()).map(|(a, b)| a + b).collect::<Vec<f32>>();
-        (1.0 - var(self.remainder()) / var(&tr)).max(0.0)
+        (1.0 - self.var(self.remainder()) / self.var(&tr)).max(0.0)
+    }
+
+    fn var(&self, series: &[f32]) -> f32 {
+        let mean = series.iter().sum::<f32>() / series.len() as f32;
+        series.iter().map(|v| (v - mean).powf(2.0)).sum::<f32>() / (series.len() as f32 - 1.0)
     }
 }
