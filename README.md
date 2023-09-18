@@ -2,6 +2,8 @@
 
 Seasonal-trend decomposition for Rust
 
+:tada: Zero dependencies
+
 [![Build Status](https://github.com/ankane/stl-rust/workflows/build/badge.svg?branch=master)](https://github.com/ankane/stl-rust/actions)
 
 ## Installation
