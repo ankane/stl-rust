@@ -1,6 +1,8 @@
 use crate::Error;
 use crate::stl::stl;
 
+pub struct Stl;
+
 #[derive(Clone, Debug)]
 pub struct StlParams {
     ns: Option<usize>,
@@ -27,6 +29,12 @@ pub struct StlResult {
 
 pub fn params() -> StlParams {
     StlParams::new()
+}
+
+impl Stl {
+    pub fn fit(y: &[f32], np: usize) -> Result<StlResult, Error> {
+        params().fit(y, np)
+    }
 }
 
 impl StlParams {

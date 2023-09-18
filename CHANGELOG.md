@@ -1,5 +1,6 @@
 ## 0.3.0 (unreleased)
 
+- Added `Stl` struct
 - Changed `StlResult` methods to return slices
 
 ## 0.2.2 (2023-06-20)
