@@ -32,8 +32,8 @@ pub fn params() -> StlParams {
 }
 
 impl Stl {
-    pub fn decompose(y: &[f32], np: usize) -> Result<StlResult, Error> {
-        params().decompose(y, np)
+    pub fn fit(y: &[f32], np: usize) -> Result<StlResult, Error> {
+        params().fit(y, np)
     }
 }
 
@@ -115,7 +115,7 @@ impl StlParams {
         self
     }
 
-    pub fn decompose(&self, y: &[f32], np: usize) -> Result<StlResult, Error> {
+    pub fn fit(&self, y: &[f32], np: usize) -> Result<StlResult, Error> {
         let n = y.len();
 
         if n < np * 2 {
@@ -203,10 +203,6 @@ impl StlParams {
             remainder,
             weights: rw
         })
-    }
-
-    pub fn fit(&self, y: &[f32], np: usize) -> Result<StlResult, Error> {
-        self.decompose(y, np)
     }
 }
 
