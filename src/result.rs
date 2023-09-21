@@ -6,6 +6,16 @@ pub struct StlResult {
     pub(crate) weights: Vec<f32>
 }
 
+fn var(series: &[f32]) -> f32 {
+    let mean = series.iter().sum::<f32>() / series.len() as f32;
+    series.iter().map(|v| (v - mean).powf(2.0)).sum::<f32>() / (series.len() as f32 - 1.0)
+}
+
+fn strength(component: &[f32], remainder: &[f32]) -> f32 {
+    let sr = component.iter().zip(remainder).map(|(a, b)| a + b).collect::<Vec<f32>>();
+    (1.0 - var(remainder) / var(&sr)).max(0.0)
+}
+
 impl StlResult {
     pub fn seasonal(&self) -> &[f32] {
         &self.seasonal
@@ -24,20 +34,10 @@ impl StlResult {
     }
 
     pub fn seasonal_strength(&self) -> f32 {
-        self.strength(self.seasonal())
+        strength(self.seasonal(), self.remainder())
     }
 
     pub fn trend_strength(&self) -> f32 {
-        self.strength(self.trend())
-    }
-
-    fn strength(&self, component: &[f32]) -> f32 {
-        let sr = component.iter().zip(self.remainder()).map(|(a, b)| a + b).collect::<Vec<f32>>();
-        (1.0 - self.var(self.remainder()) / self.var(&sr)).max(0.0)
-    }
-
-    fn var(&self, series: &[f32]) -> f32 {
-        let mean = series.iter().sum::<f32>() / series.len() as f32;
-        series.iter().map(|v| (v - mean).powf(2.0)).sum::<f32>() / (series.len() as f32 - 1.0)
+        strength(self.trend(), self.remainder())
     }
 }
