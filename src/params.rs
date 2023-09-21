@@ -1,7 +1,6 @@
-use crate::Error;
-use crate::stl::stl;
-
-pub struct Stl;
+use super::Error;
+use super::result::StlResult;
+use super::stl::stl;
 
 #[derive(Clone, Debug)]
 pub struct StlParams {
@@ -17,24 +16,6 @@ pub struct StlParams {
     ni: Option<usize>,
     no: Option<usize>,
     robust: bool
-}
-
-#[derive(Clone, Debug)]
-pub struct StlResult {
-    seasonal: Vec<f32>,
-    trend: Vec<f32>,
-    remainder: Vec<f32>,
-    weights: Vec<f32>
-}
-
-pub fn params() -> StlParams {
-    StlParams::new()
-}
-
-impl Stl {
-    pub fn fit(y: &[f32], np: usize) -> Result<StlResult, Error> {
-        params().fit(y, np)
-    }
 }
 
 impl StlParams {
@@ -209,38 +190,5 @@ impl StlParams {
 impl Default for StlParams {
     fn default() -> Self {
         Self::new()
-    }
-}
-
-impl StlResult {
-    pub fn seasonal(&self) -> &[f32] {
-        &self.seasonal
-    }
-
-    pub fn trend(&self) -> &[f32] {
-        &self.trend
-    }
-
-    pub fn remainder(&self) -> &[f32] {
-        &self.remainder
-    }
-
-    pub fn weights(&self) -> &[f32] {
-        &self.weights
-    }
-
-    pub fn seasonal_strength(&self) -> f32 {
-        let sr = self.seasonal().iter().zip(self.remainder()).map(|(a, b)| a + b).collect::<Vec<f32>>();
-        (1.0 - self.var(self.remainder()) / self.var(&sr)).max(0.0)
-    }
-
-    pub fn trend_strength(&self) -> f32 {
-        let tr = self.trend().iter().zip(self.remainder()).map(|(a, b)| a + b).collect::<Vec<f32>>();
-        (1.0 - self.var(self.remainder()) / self.var(&tr)).max(0.0)
-    }
-
-    fn var(&self, series: &[f32]) -> f32 {
-        let mean = series.iter().sum::<f32>() / series.len() as f32;
-        series.iter().map(|v| (v - mean).powf(2.0)).sum::<f32>() / (series.len() as f32 - 1.0)
     }
 }

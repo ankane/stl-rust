@@ -4,10 +4,24 @@
 
 mod error;
 mod params;
+mod result;
 mod stl;
 
 pub use error::Error;
-pub use params::{params, Stl, StlParams, StlResult};
+pub use params::StlParams;
+pub use result::StlResult;
+
+pub struct Stl;
+
+impl Stl {
+    pub fn fit(y: &[f32], np: usize) -> Result<StlResult, Error> {
+        StlParams::new().fit(y, np)
+    }
+}
+
+pub fn params() -> StlParams {
+    StlParams::new()
+}
 
 #[cfg(test)]
 mod tests {
