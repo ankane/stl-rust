@@ -3,8 +3,8 @@ use super::{Error, StlParams, StlResult};
 pub struct Stl;
 
 impl Stl {
-    pub fn fit(y: &[f32], np: usize) -> Result<StlResult, Error> {
-        StlParams::new().fit(y, np)
+    pub fn fit(series: &[f32], period: usize) -> Result<StlResult, Error> {
+        StlParams::new().fit(series, period)
     }
 
     pub fn params() -> StlParams {

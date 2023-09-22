@@ -95,7 +95,9 @@ impl StlParams {
         self
     }
 
-    pub fn fit(&self, y: &[f32], np: usize) -> Result<StlResult, Error> {
+    pub fn fit(&self, series: &[f32], period: usize) -> Result<StlResult, Error> {
+        let y = series;
+        let np = period;
         let n = y.len();
 
         if n < np * 2 {
