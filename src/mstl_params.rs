@@ -53,6 +53,12 @@ impl MstlParams {
             }
         }
 
+        if let Some(lambda) = self.lambda {
+            if lambda < 0.0 || lambda > 1.0 {
+                return Err(Error::Parameter("lambda must be between 0 and 1".to_string()));
+            }
+        }
+
         // keep track of indices instead of sorting seas_ids
         // so order is preserved with seasonality
         let mut indices: Vec<usize> = (0..seas_ids.len()).collect();

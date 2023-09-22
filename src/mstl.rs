@@ -83,6 +83,15 @@ mod tests {
     }
 
     #[test]
+    fn test_lambda_out_of_range() {
+        let result = Mstl::params().lambda(2.0).fit(&generate_series(), &[6, 10]);
+        assert_eq!(
+            result.unwrap_err(),
+            Error::Parameter("lambda must be between 0 and 1".to_string())
+        );
+    }
+
+    #[test]
     fn test_empty_periods() {
         let periods: Vec<usize> = Vec::new();
         let result = Mstl::fit(&generate_series(), &periods);
