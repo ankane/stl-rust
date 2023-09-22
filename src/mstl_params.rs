@@ -54,7 +54,7 @@ impl MstlParams {
         }
 
         if let Some(lambda) = self.lambda {
-            if lambda < 0.0 || lambda > 1.0 {
+            if !(0.0..=1.0).contains(&lambda) {
                 return Err(Error::Parameter("lambda must be between 0 and 1".to_string()));
             }
         }
@@ -133,7 +133,7 @@ impl Default for MstlParams {
 }
 
 fn box_cox(y: &[f32], lambda: f32) -> Vec<f32> {
-    if lambda > 0.0 {
+    if lambda != 0.0 {
         y.iter().map(|yi| (yi.powf(lambda) - 1.0) / lambda).collect()
     } else {
         y.iter().map(|yi| yi.ln()).collect()
