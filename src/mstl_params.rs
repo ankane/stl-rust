@@ -6,6 +6,7 @@ use super::{Error, MstlResult, StlParams};
 
 pub struct MstlParams {
     iterate: usize,
+    lambda: Option<f32>,
     stl_params: StlParams,
 }
 
@@ -13,12 +14,18 @@ impl MstlParams {
     pub fn new() -> Self {
         Self {
             iterate: 2,
+            lambda: None,
             stl_params: StlParams::new(),
         }
     }
 
     pub fn iterations(&mut self, iterate: usize) -> &mut Self {
         self.iterate = iterate;
+        self
+    }
+
+    pub fn lambda(&mut self, lambda: f32) -> &mut Self {
+        self.lambda = Some(lambda);
         self
     }
 
@@ -59,8 +66,11 @@ impl MstlParams {
         let mut seasonality = Vec::with_capacity(seas_ids.len());
         let mut trend = Vec::new();
 
-        // TODO add lambda param
-        let mut deseas = x.to_vec();
+        let mut deseas = if let Some(lambda) = self.lambda {
+            box_cox(x, lambda)
+        } else {
+            x.to_vec()
+        };
 
         if !seas_ids.is_empty() {
             for _ in 0..seas_ids.len() {
@@ -113,5 +123,13 @@ impl MstlParams {
 impl Default for MstlParams {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+fn box_cox(y: &[f32], lambda: f32) -> Vec<f32> {
+    if lambda > 0.0 {
+        y.iter().map(|yi| (yi.powf(lambda) - 1.0) / lambda).collect()
+    } else {
+        y.iter().map(|yi| yi.ln()).collect()
     }
 }

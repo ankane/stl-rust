@@ -87,6 +87,7 @@ Set MSTL parameters [unreleased]
 ```rust
 Mstl::params()
     .iterations(2)                 // number of iterations
+    .lambda(0.5)                   // lambda for Box-Cox transformation
     .stl_params(Stl::params())     // STL params
 ```
 
