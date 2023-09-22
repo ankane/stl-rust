@@ -6,11 +6,15 @@ impl Stl {
     pub fn fit(y: &[f32], np: usize) -> Result<StlResult, Error> {
         StlParams::new().fit(y, np)
     }
+
+    pub fn params() -> StlParams {
+        StlParams::new()
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::{Error, Stl, StlParams};
+    use crate::{Error, Stl};
 
     fn assert_in_delta(exp: f32, act: f32) {
         assert!((exp - act).abs() < 0.001);
@@ -42,7 +46,7 @@ mod tests {
 
     #[test]
     fn test_robust() {
-        let result = StlParams::new().robust(true).fit(&generate_series(), 7).unwrap();
+        let result = Stl::params().robust(true).fit(&generate_series(), 7).unwrap();
         assert_elements_in_delta(&[0.14922355, 0.47939026, -1.833231, 1.7411387, 0.8200711], &result.seasonal()[..5]);
         assert_elements_in_delta(&[5.397365, 5.4745436, 5.5517216, 5.6499176, 5.748114], &result.trend()[..5]);
         assert_elements_in_delta(&[-0.5465884, 3.0460663, -1.7184906, 1.6089439, -6.5681853], &result.remainder()[..5]);
@@ -61,7 +65,7 @@ mod tests {
 
     #[test]
     fn test_too_few_periods() {
-        let result = StlParams::new().fit(&generate_series(), 16);
+        let result = Stl::params().fit(&generate_series(), 16);
         assert_eq!(
             result.unwrap_err(),
             Error::Series("series has less than two periods".to_string())
@@ -70,7 +74,7 @@ mod tests {
 
     #[test]
     fn test_bad_seasonal_degree() {
-        let result = StlParams::new().seasonal_degree(2).fit(&generate_series(), 7);
+        let result = Stl::params().seasonal_degree(2).fit(&generate_series(), 7);
         assert_eq!(
             result.unwrap_err(),
             Error::Parameter("seasonal_degree must be 0 or 1".to_string())
