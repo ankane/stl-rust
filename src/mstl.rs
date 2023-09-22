@@ -45,6 +45,16 @@ mod tests {
     }
 
     #[test]
+    fn test_into_parts() {
+        let result = Mstl::fit(&generate_series(), &[6, 10]).unwrap();
+        let (seasonal, trend, remainder) = result.into_parts();
+        assert_elements_in_delta(&[0.28318232, 0.70529824, -1.980384, 2.1643379, -2.3356874], &seasonal[0][..5]);
+        assert_elements_in_delta(&[1.4130436, 1.6048906, 0.050958008, -1.8706754, -1.7704514], &seasonal[1][..5]);
+        assert_elements_in_delta(&[5.139485, 5.223691, 5.3078976, 5.387292, 5.4666862], &trend[..5]);
+        assert_elements_in_delta(&[-1.835711, 1.4661198, -1.3784716, 3.319045, -1.3605475], &remainder[..5]);
+    }
+
+    #[test]
     fn test_unsorted_periods() {
         let result = Mstl::fit(&generate_series(), &[10, 6]).unwrap();
         assert_elements_in_delta(&[1.4130436, 1.6048906, 0.050958008, -1.8706754, -1.7704514], &result.seasonal()[0][..5]);

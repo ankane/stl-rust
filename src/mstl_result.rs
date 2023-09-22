@@ -27,4 +27,8 @@ impl MstlResult {
     pub fn trend_strength(&self) -> f32 {
         strength(self.trend(), self.remainder())
     }
+
+    pub fn into_parts(self) -> (Vec<Vec<f32>>, Vec<f32>, Vec<f32>) {
+        (self.seasonal, self.trend, self.remainder)
+    }
 }
