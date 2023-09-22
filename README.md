@@ -86,10 +86,10 @@ Set MSTL parameters [unreleased]
 
 ```rust
 Mstl::params()
-    .iterations(2)                 // number of iterations
-    .lambda(0.5)                   // lambda for Box-Cox transformation
-    .seasonal_lengths(&[11, 15])   // lengths of the seasonal smoothers
-    .stl_params(Stl::params())     // STL params
+    .iterations(2)                   // number of iterations
+    .lambda(0.5)                     // lambda for Box-Cox transformation
+    .seasonal_lengths(&[11, 15])     // lengths of the seasonal smoothers
+    .stl_params(Stl::params())       // STL params
 ```
 
 ## Strength
