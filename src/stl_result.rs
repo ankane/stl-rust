@@ -11,7 +11,7 @@ fn var(series: &[f32]) -> f32 {
     series.iter().map(|v| (v - mean).powf(2.0)).sum::<f32>() / (series.len() as f32 - 1.0)
 }
 
-fn strength(component: &[f32], remainder: &[f32]) -> f32 {
+pub(crate) fn strength(component: &[f32], remainder: &[f32]) -> f32 {
     let sr = component.iter().zip(remainder).map(|(a, b)| a + b).collect::<Vec<f32>>();
     (1.0 - var(remainder) / var(&sr)).max(0.0)
 }

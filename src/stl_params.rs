@@ -3,7 +3,7 @@ use super::stl_impl::stl;
 
 #[derive(Clone, Debug)]
 pub struct StlParams {
-    ns: Option<usize>,
+    pub(crate) ns: Option<usize>,
     nt: Option<usize>,
     nl: Option<usize>,
     isdeg: i32,

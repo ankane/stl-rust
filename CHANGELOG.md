@@ -1,5 +1,6 @@
 ## 0.3.0 (unreleased)
 
+- Added support for MSTL
 - Added `Stl` struct
 - Added `into_parts` method to `StlResult`
 - Changed `StlResult` methods to return slices
