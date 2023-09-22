@@ -7,6 +7,7 @@ use super::{Error, MstlResult, StlParams};
 pub struct MstlParams {
     iterate: usize,
     lambda: Option<f32>,
+    swin: Option<Vec<usize>>,
     stl_params: StlParams,
 }
 
@@ -15,6 +16,7 @@ impl MstlParams {
         Self {
             iterate: 2,
             lambda: None,
+            swin: None,
             stl_params: StlParams::new(),
         }
     }
@@ -26,6 +28,11 @@ impl MstlParams {
 
     pub fn lambda(&mut self, lambda: f32) -> &mut Self {
         self.lambda = Some(lambda);
+        self
+    }
+
+    pub fn seasonal_lengths(&mut self, swin: &[usize]) -> &mut Self {
+        self.swin = Some(swin.to_vec());
         self
     }
 
@@ -56,6 +63,12 @@ impl MstlParams {
         if let Some(lambda) = self.lambda {
             if !(0.0..=1.0).contains(&lambda) {
                 return Err(Error::Parameter("lambda must be between 0 and 1".to_string()));
+            }
+        }
+
+        if let Some(swin) = &self.swin {
+            if swin.len() != seas_ids.len() {
+                return Err(Error::Parameter("seasonal_lengths must have the same length as periods".to_string()));
             }
         }
 
@@ -93,8 +106,9 @@ impl MstlParams {
                         }
                     }
 
-                    // TODO add seasonal_lengths param
-                    let fit = if self.stl_params.ns.is_some() {
+                    let fit = if let Some(swin) = &self.swin {
+                        self.stl_params.clone().seasonal_length(swin[idx]).fit(&deseas, np)?
+                    } else if self.stl_params.ns.is_some() {
                         self.stl_params.fit(&deseas, np)?
                     } else {
                         let seasonal_length = 7 + 4 * (i + 1);
