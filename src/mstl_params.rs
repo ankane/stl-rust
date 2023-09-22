@@ -65,10 +65,10 @@ impl MstlParams {
             }
         }
 
-        let (trend, remainder, seasonality) = mstl(series, periods, self.iterate, self.lambda, &self.swin, &self.stl_params)?;
+        let (trend, remainder, seasonal) = mstl(series, periods, self.iterate, self.lambda, &self.swin, &self.stl_params)?;
 
         Ok(MstlResult {
-            seasonal: seasonality,
+            seasonal,
             trend,
             remainder,
         })
