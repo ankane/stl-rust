@@ -65,6 +65,16 @@ mod tests {
     }
 
     #[test]
+    fn test_into_parts() {
+        let result = Stl::fit(&generate_series(), 7).unwrap();
+        let (seasonal, trend, remainder, weights) = result.into_parts();
+        assert_elements_in_delta(&[0.36926576, 0.75655484, -1.3324139, 1.9553658, -0.6044802], &seasonal[..5]);
+        assert_elements_in_delta(&[4.804099, 4.9097075, 5.015316, 5.16045, 5.305584], &trend[..5]);
+        assert_elements_in_delta(&[-0.17336464, 3.3337379, -1.6829021, 1.8841844, -4.7011037], &remainder[..5]);
+        assert_elements_in_delta(&[1.0, 1.0, 1.0, 1.0, 1.0], &weights[..5]);
+    }
+
+    #[test]
     fn test_too_few_periods() {
         let result = StlParams::new().fit(&generate_series(), 16);
         assert_eq!(

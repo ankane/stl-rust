@@ -40,4 +40,8 @@ impl StlResult {
     pub fn trend_strength(&self) -> f32 {
         strength(self.trend(), self.remainder())
     }
+
+    pub fn into_parts(self) -> (Vec<f32>, Vec<f32>, Vec<f32>, Vec<f32>) {
+        (self.seasonal, self.trend, self.remainder, self.weights)
+    }
 }
