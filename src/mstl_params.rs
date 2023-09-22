@@ -105,7 +105,7 @@ impl MstlParams {
         Ok(MstlResult {
             seasonal: seasonality,
             trend,
-            remainder
+            remainder,
         })
     }
 }

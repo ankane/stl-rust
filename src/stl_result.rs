@@ -3,7 +3,7 @@ pub struct StlResult {
     pub(crate) seasonal: Vec<f32>,
     pub(crate) trend: Vec<f32>,
     pub(crate) remainder: Vec<f32>,
-    pub(crate) weights: Vec<f32>
+    pub(crate) weights: Vec<f32>,
 }
 
 fn var(series: &[f32]) -> f32 {

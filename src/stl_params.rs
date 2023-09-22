@@ -1,5 +1,5 @@
-use super::{Error, StlResult};
 use super::stl_impl::stl;
+use super::{Error, StlResult};
 
 #[derive(Clone, Debug)]
 pub struct StlParams {
@@ -14,7 +14,7 @@ pub struct StlParams {
     nljump: Option<usize>,
     ni: Option<usize>,
     no: Option<usize>,
-    robust: bool
+    robust: bool,
 }
 
 impl StlParams {
@@ -31,7 +31,7 @@ impl StlParams {
             nljump: None,
             ni: None,
             no: None,
-            robust: false
+            robust: false,
         }
     }
 
@@ -183,7 +183,7 @@ impl StlParams {
             seasonal: season,
             trend,
             remainder,
-            weights: rw
+            weights: rw,
         })
     }
 }
