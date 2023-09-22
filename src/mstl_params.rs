@@ -111,8 +111,7 @@ impl MstlParams {
                     } else if self.stl_params.ns.is_some() {
                         self.stl_params.fit(&deseas, np)?
                     } else {
-                        let seasonal_length = 7 + 4 * (i + 1);
-                        self.stl_params.clone().seasonal_length(seasonal_length).fit(&deseas, np)?
+                        self.stl_params.clone().seasonal_length(7 + 4 * (i + 1)).fit(&deseas, np)?
                     };
 
                     (seasonality[idx], trend, _, _) = fit.into_parts();
