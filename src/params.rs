@@ -1,6 +1,5 @@
-use super::Error;
-use super::result::StlResult;
-use super::stl::stl;
+use super::{Error, StlResult};
+use super::stl_impl::stl;
 
 #[derive(Clone, Debug)]
 pub struct StlParams {
