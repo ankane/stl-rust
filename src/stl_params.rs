@@ -18,6 +18,7 @@ pub struct StlParams {
 }
 
 impl StlParams {
+    /// Creates a new set of parameters.
     pub fn new() -> Self {
         Self {
             ns: None,
@@ -35,66 +36,79 @@ impl StlParams {
         }
     }
 
+    /// Sets the length of the seasonal smoother.
     pub fn seasonal_length(&mut self, ns: usize) -> &mut Self {
         self.ns = Some(ns);
         self
     }
 
+    /// Sets the length of the trend smoother.
     pub fn trend_length(&mut self, nt: usize) -> &mut Self {
         self.nt = Some(nt);
         self
     }
 
+    /// Sets the length of the low-pass filter.
     pub fn low_pass_length(&mut self, nl: usize) -> &mut Self {
         self.nl = Some(nl);
         self
     }
 
+    /// Sets the degree of locally-fitted polynomial in seasonal smoothing.
     pub fn seasonal_degree(&mut self, isdeg: i32) -> &mut Self {
         self.isdeg = isdeg;
         self
     }
 
+    /// Sets the degree of locally-fitted polynomial in trend smoothing.
     pub fn trend_degree(&mut self, itdeg: i32) -> &mut Self {
         self.itdeg = itdeg;
         self
     }
 
+    /// Sets the degree of locally-fitted polynomial in low-pass smoothing.
     pub fn low_pass_degree(&mut self, ildeg: i32) -> &mut Self {
         self.ildeg = Some(ildeg);
         self
     }
 
+    /// Sets the skipping value for seasonal smoothing.
     pub fn seasonal_jump(&mut self, nsjump: usize) -> &mut Self {
         self.nsjump = Some(nsjump);
         self
     }
 
+    /// Sets the skipping value for trend smoothing.
     pub fn trend_jump(&mut self, ntjump: usize) -> &mut Self {
         self.ntjump = Some(ntjump);
         self
     }
 
+    /// Sets the skipping value for low-pass smoothing.
     pub fn low_pass_jump(&mut self, nljump: usize) -> &mut Self {
         self.nljump = Some(nljump);
         self
     }
 
+    /// Sets the number of loops for updating the seasonal and trend components.
     pub fn inner_loops(&mut self, ni: usize) -> &mut Self {
         self.ni = Some(ni);
         self
     }
 
+    /// Sets the number of iterations of robust fitting.
     pub fn outer_loops(&mut self, no: usize) -> &mut Self {
         self.no = Some(no);
         self
     }
 
+    /// Sets whether robustness iterations are to be used.
     pub fn robust(&mut self, robust: bool) -> &mut Self {
         self.robust = robust;
         self
     }
 
+    /// Decomposes a time series.
     pub fn fit(&self, series: &[f32], period: usize) -> Result<StlResult, Error> {
         let y = series;
         let np = period;

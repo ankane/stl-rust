@@ -3,10 +3,12 @@ use super::{Error, StlParams, StlResult};
 pub struct Stl;
 
 impl Stl {
+    /// Decomposes a time series.
     pub fn fit(series: &[f32], period: usize) -> Result<StlResult, Error> {
         StlParams::new().fit(series, period)
     }
 
+    /// Creates a new set of parameters.
     pub fn params() -> StlParams {
         StlParams::new()
     }

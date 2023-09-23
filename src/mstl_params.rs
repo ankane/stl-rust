@@ -9,6 +9,7 @@ pub struct MstlParams {
 }
 
 impl MstlParams {
+    /// Creates a new set of parameters.
     pub fn new() -> Self {
         Self {
             iterate: 2,
@@ -18,26 +19,31 @@ impl MstlParams {
         }
     }
 
+    /// Sets the number of iterations.
     pub fn iterations(&mut self, iterate: usize) -> &mut Self {
         self.iterate = iterate;
         self
     }
 
+    /// Sets lambda for Box-Cox transformation.
     pub fn lambda(&mut self, lambda: f32) -> &mut Self {
         self.lambda = Some(lambda);
         self
     }
 
+    /// Sets the lengths of the seasonal smoothers.
     pub fn seasonal_lengths(&mut self, swin: &[usize]) -> &mut Self {
         self.swin = Some(swin.to_vec());
         self
     }
 
+    /// Sets the STL parameters.
     pub fn stl_params(&mut self, stl_params: StlParams) -> &mut Self {
         self.stl_params = stl_params;
         self
     }
 
+    /// Decomposes a time series.
     pub fn fit(&self, series: &[f32], periods: &[usize]) -> Result<MstlResult, Error> {
         // return error to be consistent with stl
         // and ensure seasonal is always same length as periods

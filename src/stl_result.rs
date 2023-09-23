@@ -17,30 +17,37 @@ pub(crate) fn strength(component: &[f32], remainder: &[f32]) -> f32 {
 }
 
 impl StlResult {
+    /// Returns the seasonal component.
     pub fn seasonal(&self) -> &[f32] {
         &self.seasonal
     }
 
+    /// Returns the trend component.
     pub fn trend(&self) -> &[f32] {
         &self.trend
     }
 
+    /// Returns the remainder.
     pub fn remainder(&self) -> &[f32] {
         &self.remainder
     }
 
+    /// Returns the weights.
     pub fn weights(&self) -> &[f32] {
         &self.weights
     }
 
+    /// Returns the seasonal strength.
     pub fn seasonal_strength(&self) -> f32 {
         strength(self.seasonal(), self.remainder())
     }
 
+    /// Returns the trend strength.
     pub fn trend_strength(&self) -> f32 {
         strength(self.trend(), self.remainder())
     }
 
+    /// Takes ownership of the components.
     pub fn into_parts(self) -> (Vec<f32>, Vec<f32>, Vec<f32>, Vec<f32>) {
         (self.seasonal, self.trend, self.remainder, self.weights)
     }

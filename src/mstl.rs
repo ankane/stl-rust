@@ -3,10 +3,12 @@ use super::{Error, MstlParams, MstlResult};
 pub struct Mstl;
 
 impl Mstl {
+    /// Decomposes a time series.
     pub fn fit(series: &[f32], periods: &[usize]) -> Result<MstlResult, Error> {
         MstlParams::new().fit(series, periods)
     }
 
+    /// Creates a new set of parameters.
     pub fn params() -> MstlParams {
         MstlParams::new()
     }
