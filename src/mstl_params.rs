@@ -20,8 +20,8 @@ impl MstlParams {
     }
 
     /// Sets the number of iterations.
-    pub fn iterations(&mut self, iterate: usize) -> &mut Self {
-        self.iterate = iterate;
+    pub fn iterations(&mut self, iterations: usize) -> &mut Self {
+        self.iterate = iterations;
         self
     }
 
@@ -32,8 +32,8 @@ impl MstlParams {
     }
 
     /// Sets the lengths of the seasonal smoothers.
-    pub fn seasonal_lengths(&mut self, swin: &[usize]) -> &mut Self {
-        self.swin = Some(swin.to_vec());
+    pub fn seasonal_lengths(&mut self, lengths: &[usize]) -> &mut Self {
+        self.swin = Some(lengths.to_vec());
         self
     }
 
