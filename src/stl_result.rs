@@ -47,7 +47,7 @@ impl StlResult {
         strength(self.trend(), self.remainder())
     }
 
-    /// Takes ownership of the components.
+    /// Consumes the result, returning the seasonal component, trend component, remainder, and weights.
     pub fn into_parts(self) -> (Vec<f32>, Vec<f32>, Vec<f32>, Vec<f32>) {
         (self.seasonal, self.trend, self.remainder, self.weights)
     }

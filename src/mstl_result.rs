@@ -33,7 +33,7 @@ impl MstlResult {
         strength(self.trend(), self.remainder())
     }
 
-    /// Takes ownership of the components.
+    /// Consumes the result, returning the seasonal components, trend component, and remainder.
     pub fn into_parts(self) -> (Vec<Vec<f32>>, Vec<f32>, Vec<f32>) {
         (self.seasonal, self.trend, self.remainder)
     }
