@@ -11,7 +11,7 @@ Seasonal-trend decomposition for Rust
 Add this line to your application’s `Cargo.toml` under `[dependencies]`:
 
 ```toml
-stlrs = "0.2"
+stlrs = "0.3"
 ```
 
 ## Getting Started
@@ -19,6 +19,8 @@ stlrs = "0.2"
 Decompose a time series
 
 ```rust
+use stlrs::Stl;
+
 let series = vec![
     5.0, 9.0, 2.0, 9.0, 0.0, 6.0, 3.0, 8.0, 5.0, 8.0,
     7.0, 8.0, 8.0, 0.0, 2.0, 5.0, 0.0, 5.0, 6.0, 7.0,
@@ -26,7 +28,7 @@ let series = vec![
 ];
 let period = 7; // period of the seasonal component
 
-let res = stlrs::params().fit(&series, period).unwrap();
+let res = Stl::fit(&series, period).unwrap();
 ```
 
 Get the components
@@ -42,7 +44,7 @@ res.remainder();
 Use robustness iterations
 
 ```rust
-let res = stlrs::params().robust(true).fit(&series, period).unwrap();
+let res = Stl::params().robust(true).fit(&series, period).unwrap();
 ```
 
 Get robustness weights
@@ -53,13 +55,12 @@ res.weights();
 
 ## Multiple Seasonality
 
-Specify multiple periods [unreleased]
+Specify multiple periods
 
 ```rust
 use stlrs::Mstl;
 
-let periods = [6, 10];
-let res = Mstl::fit(&series, &periods).unwrap();
+let res = Mstl::fit(&series, &[7, 365]).unwrap();
 ```
 
 ## Parameters
@@ -67,7 +68,7 @@ let res = Mstl::fit(&series, &periods).unwrap();
 Set STL parameters
 
 ```rust
-stlrs::params()
+Stl::params()
     .seasonal_length(7)     // length of the seasonal smoother
     .trend_length(15)       // length of the trend smoother
     .low_pass_length(7)     // length of the low-pass filter
@@ -82,7 +83,7 @@ stlrs::params()
     .robust(false)          // if robustness iterations are to be used
 ```
 
-Set MSTL parameters [unreleased]
+Set MSTL parameters
 
 ```rust
 Mstl::params()

@@ -1,4 +1,4 @@
-## 0.3.0 (unreleased)
+## 0.3.0 (2023-09-25)
 
 - Added support for MSTL
 - Added `Stl` struct
