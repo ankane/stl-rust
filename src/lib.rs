@@ -1,6 +1,4 @@
-//! Seasonal-trend decomposition for Rust
-//!
-//! [View the docs](https://github.com/ankane/stl-rust)
+#![doc = include_str!("../README.md")]
 
 mod error;
 mod mstl;
