@@ -4,7 +4,7 @@ Seasonal-trend decomposition for Rust
 
 🎉 Zero dependencies
 
-[![Build Status](https://github.com/ankane/stl-rust/workflows/build/badge.svg?branch=master)](https://github.com/ankane/stl-rust/actions)
+[![Build Status](https://github.com/ankane/stl-rust/actions/workflows/build.yml/badge.svg)](https://github.com/ankane/stl-rust/actions)
 
 ## Installation
 
