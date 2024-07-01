@@ -1,5 +1,6 @@
 use super::{Error, StlParams, StlResult};
 
+/// Seasonal-trend decomposition using Loess (STL).
 pub struct Stl;
 
 impl Stl {

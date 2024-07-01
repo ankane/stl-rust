@@ -1,3 +1,4 @@
+/// A STL result.
 #[derive(Clone, Debug)]
 pub struct StlResult {
     pub(crate) seasonal: Vec<f32>,

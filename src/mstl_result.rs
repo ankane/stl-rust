@@ -1,5 +1,6 @@
 use super::stl_result::strength;
 
+/// A MSTL result.
 #[derive(Clone, Debug)]
 pub struct MstlResult {
     pub(crate) seasonal: Vec<Vec<f32>>,

@@ -1,6 +1,7 @@
 use super::stl_impl::stl;
 use super::{Error, StlResult};
 
+/// A set of STL parameters.
 #[derive(Clone, Debug)]
 pub struct StlParams {
     pub(crate) ns: Option<usize>,

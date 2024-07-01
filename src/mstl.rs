@@ -1,5 +1,6 @@
 use super::{Error, MstlParams, MstlResult};
 
+/// Multiple seasonal-trend decomposition using Loess (MSTL).
 pub struct Mstl;
 
 impl Mstl {

@@ -1,6 +1,7 @@
 use super::mstl_impl::mstl;
 use super::{Error, MstlResult, StlParams};
 
+/// A set of MSTL parameters.
 #[derive(Clone, Debug)]
 pub struct MstlParams {
     iterate: usize,

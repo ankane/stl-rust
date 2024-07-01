@@ -1,6 +1,7 @@
 use std::error;
 use std::fmt;
 
+/// An error.
 #[derive(Debug, Eq, PartialEq)]
 pub enum Error {
     Parameter(String),
