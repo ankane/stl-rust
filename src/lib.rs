@@ -18,7 +18,7 @@ pub use stl::Stl;
 pub use stl_params::StlParams;
 pub use stl_result::StlResult;
 
-/// Creates a new set of parameters.
+/// Creates a new set of STL parameters.
 pub fn params() -> StlParams {
     StlParams::new()
 }
