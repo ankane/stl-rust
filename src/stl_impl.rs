@@ -6,7 +6,25 @@
 
 #![allow(clippy::too_many_arguments)]
 
-pub fn stl(y: &[f32], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isdeg: i32, itdeg: i32, ildeg: i32, nsjump: usize, ntjump: usize, nljump: usize, ni: usize, no: usize, rw: &mut [f32], season: &mut [f32], trend: &mut [f32]) {
+pub fn stl(
+    y: &[f32],
+    n: usize,
+    np: usize,
+    ns: usize,
+    nt: usize,
+    nl: usize,
+    isdeg: i32,
+    itdeg: i32,
+    ildeg: i32,
+    nsjump: usize,
+    ntjump: usize,
+    nljump: usize,
+    ni: usize,
+    no: usize,
+    rw: &mut [f32],
+    season: &mut [f32],
+    trend: &mut [f32],
+) {
     let mut work1 = vec![0.0; n + 2 * np];
     let mut work2 = vec![0.0; n + 2 * np];
     let mut work3 = vec![0.0; n + 2 * np];
@@ -17,7 +35,10 @@ pub fn stl(y: &[f32], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isde
     let mut k = 0;
 
     loop {
-        onestp(y, n, np, ns, nt, nl, isdeg, itdeg, ildeg, nsjump, ntjump, nljump, ni, userw, rw, season, trend, &mut work1, &mut work2, &mut work3, &mut work4, &mut work5);
+        onestp(
+            y, n, np, ns, nt, nl, isdeg, itdeg, ildeg, nsjump, ntjump, nljump, ni, userw, rw,
+            season, trend, &mut work1, &mut work2, &mut work3, &mut work4, &mut work5,
+        );
         k += 1;
         if k > no {
             break;
@@ -36,7 +57,17 @@ pub fn stl(y: &[f32], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isde
     }
 }
 
-fn ess(y: &[f32], n: usize, len: usize, ideg: i32, njump: usize, userw: bool, rw: &[f32], ys: &mut [f32], res: &mut [f32]) {
+fn ess(
+    y: &[f32],
+    n: usize,
+    len: usize,
+    ideg: i32,
+    njump: usize,
+    userw: bool,
+    rw: &[f32],
+    ys: &mut [f32],
+    res: &mut [f32],
+) {
     if n < 2 {
         ys[0] = y[0];
         return;
@@ -51,30 +82,58 @@ fn ess(y: &[f32], n: usize, len: usize, ideg: i32, njump: usize, userw: bool, rw
         nright = n;
         let mut i = 1;
         while i <= n {
-            let ok = est(y, n, len, ideg, i as f32, &mut ys[i - 1], nleft, nright, res, userw, rw);
+            let ok = est(
+                y,
+                n,
+                len,
+                ideg,
+                i as f32,
+                &mut ys[i - 1],
+                nleft,
+                nright,
+                res,
+                userw,
+                rw,
+            );
             if !ok {
                 ys[i - 1] = y[i - 1];
             }
             i += newnj;
         }
-    } else if newnj == 1 { // newnj equal to one, len less than n
+    } else if newnj == 1 {
+        // newnj equal to one, len less than n
         let nsh = (len + 1) / 2;
         nleft = 1;
         nright = len;
-        for i in 1..=n { // fitted value at i
+        for i in 1..=n {
+            // fitted value at i
             if i > nsh && nright != n {
                 nleft += 1;
                 nright += 1;
             }
-            let ok = est(y, n, len, ideg, i as f32, &mut ys[i - 1], nleft, nright, res, userw, rw);
+            let ok = est(
+                y,
+                n,
+                len,
+                ideg,
+                i as f32,
+                &mut ys[i - 1],
+                nleft,
+                nright,
+                res,
+                userw,
+                rw,
+            );
             if !ok {
                 ys[i - 1] = y[i - 1];
             }
         }
-    } else { // newnj greater than one, len less than n
+    } else {
+        // newnj greater than one, len less than n
         let nsh = (len + 1) / 2;
         let mut i = 1;
-        while i <= n { // fitted value at i
+        while i <= n {
+            // fitted value at i
             if i < nsh {
                 nleft = 1;
                 nright = len;
@@ -85,7 +144,19 @@ fn ess(y: &[f32], n: usize, len: usize, ideg: i32, njump: usize, userw: bool, rw
                 nleft = i - nsh + 1;
                 nright = len + i - nsh;
             }
-            let ok = est(y, n, len, ideg, i as f32, &mut ys[i - 1], nleft, nright, res, userw, rw);
+            let ok = est(
+                y,
+                n,
+                len,
+                ideg,
+                i as f32,
+                &mut ys[i - 1],
+                nleft,
+                nright,
+                res,
+                userw,
+                rw,
+            );
             if !ok {
                 ys[i - 1] = y[i - 1];
             }
@@ -104,7 +175,19 @@ fn ess(y: &[f32], n: usize, len: usize, ideg: i32, njump: usize, userw: bool, rw
         }
         let k = ((n - 1) / newnj) * newnj + 1;
         if k != n {
-            let ok = est(y, n, len, ideg, n as f32, &mut ys[n - 1], nleft, nright, res, userw, rw);
+            let ok = est(
+                y,
+                n,
+                len,
+                ideg,
+                n as f32,
+                &mut ys[n - 1],
+                nleft,
+                nright,
+                res,
+                userw,
+                rw,
+            );
             if !ok {
                 ys[n - 1] = y[n - 1];
             }
@@ -118,7 +201,19 @@ fn ess(y: &[f32], n: usize, len: usize, ideg: i32, njump: usize, userw: bool, rw
     }
 }
 
-fn est(y: &[f32], n: usize, len: usize, ideg: i32, xs: f32, ys: &mut f32, nleft: usize, nright: usize, w: &mut [f32], userw: bool, rw: &[f32]) -> bool {
+fn est(
+    y: &[f32],
+    n: usize,
+    len: usize,
+    ideg: i32,
+    xs: f32,
+    ys: &mut f32,
+    nleft: usize,
+    nright: usize,
+    w: &mut [f32],
+    userw: bool,
+    rw: &[f32],
+) -> bool {
     let range = (n as f32) - 1.0;
     let mut h = (xs - (nleft as f32)).max((nright as f32) - xs);
 
@@ -149,14 +244,18 @@ fn est(y: &[f32], n: usize, len: usize, ideg: i32, xs: f32, ys: &mut f32, nleft:
 
     if a <= 0.0 {
         false
-    } else { // weighted least squares
-        for j in nleft..=nright { // make sum of w(j) == 1
+    } else {
+        // weighted least squares
+        for j in nleft..=nright {
+            // make sum of w(j) == 1
             w[j - 1] /= a;
         }
 
-        if h > 0.0 && ideg > 0 { // use linear fit
+        if h > 0.0 && ideg > 0 {
+            // use linear fit
             let mut a = 0.0;
-            for j in nleft..=nright { // weighted center of x values
+            for j in nleft..=nright {
+                // weighted center of x values
                 a += w[j - 1] * (j as f32);
             }
             let mut b = xs - a;
@@ -208,13 +307,38 @@ fn ma(x: &[f32], n: usize, len: usize, ave: &mut [f32]) {
     }
 }
 
-fn onestp(y: &[f32], n: usize, np: usize, ns: usize, nt: usize, nl: usize, isdeg: i32, itdeg: i32, ildeg: i32, nsjump: usize, ntjump: usize, nljump: usize, ni: usize, userw: bool, rw: &mut [f32], season: &mut [f32], trend: &mut [f32], work1: &mut [f32], work2: &mut [f32], work3: &mut [f32], work4: &mut [f32], work5: &mut [f32]) {
+fn onestp(
+    y: &[f32],
+    n: usize,
+    np: usize,
+    ns: usize,
+    nt: usize,
+    nl: usize,
+    isdeg: i32,
+    itdeg: i32,
+    ildeg: i32,
+    nsjump: usize,
+    ntjump: usize,
+    nljump: usize,
+    ni: usize,
+    userw: bool,
+    rw: &mut [f32],
+    season: &mut [f32],
+    trend: &mut [f32],
+    work1: &mut [f32],
+    work2: &mut [f32],
+    work3: &mut [f32],
+    work4: &mut [f32],
+    work5: &mut [f32],
+) {
     for _ in 0..ni {
         for i in 0..n {
             work1[i] = y[i] - trend[i];
         }
 
-        ss(work1, n, np, ns, isdeg, nsjump, userw, rw, work2, work3, work4, work5, season);
+        ss(
+            work1, n, np, ns, isdeg, nsjump, userw, rw, work2, work3, work4, work5, season,
+        );
         fts(work2, n + 2 * np, np, work3, work1);
         ess(work3, n, nl, ildeg, nljump, false, work4, work1, work5);
         for i in 0..n {
@@ -253,7 +377,21 @@ fn rwts(y: &[f32], n: usize, fit: &[f32], rw: &mut [f32]) {
     }
 }
 
-fn ss(y: &[f32], n: usize, np: usize, ns: usize, isdeg: i32, nsjump: usize, userw: bool, rw: &[f32], season: &mut [f32], work1: &mut [f32], work2: &mut [f32], work3: &mut [f32], work4: &mut [f32]) {
+fn ss(
+    y: &[f32],
+    n: usize,
+    np: usize,
+    ns: usize,
+    isdeg: i32,
+    nsjump: usize,
+    userw: bool,
+    rw: &[f32],
+    season: &mut [f32],
+    work1: &mut [f32],
+    work2: &mut [f32],
+    work3: &mut [f32],
+    work4: &mut [f32],
+) {
     for j in 1..=np {
         let k = (n - j) / np + 1;
 
@@ -265,16 +403,50 @@ fn ss(y: &[f32], n: usize, np: usize, ns: usize, isdeg: i32, nsjump: usize, user
                 work3[i - 1] = rw[(i - 1) * np + j - 1];
             }
         }
-        ess(work1, k, ns, isdeg, nsjump, userw, work3, &mut work2[1..], work4);
+        ess(
+            work1,
+            k,
+            ns,
+            isdeg,
+            nsjump,
+            userw,
+            work3,
+            &mut work2[1..],
+            work4,
+        );
         let mut xs = 0.0;
         let nright = ns.min(k);
-        let ok = est(work1, k, ns, isdeg, xs, &mut work2[0], 1, nright, work4, userw, work3);
+        let ok = est(
+            work1,
+            k,
+            ns,
+            isdeg,
+            xs,
+            &mut work2[0],
+            1,
+            nright,
+            work4,
+            userw,
+            work3,
+        );
         if !ok {
             work2[0] = work2[1];
         }
         xs = (k + 1) as f32;
         let nleft = 1.max(k as i32 - ns as i32 + 1) as usize;
-        let ok = est(work1, k, ns, isdeg, xs, &mut work2[k + 1], nleft, k, work4, userw, work3);
+        let ok = est(
+            work1,
+            k,
+            ns,
+            isdeg,
+            xs,
+            &mut work2[k + 1],
+            nleft,
+            k,
+            work4,
+            userw,
+            work3,
+        );
         if !ok {
             work2[k + 1] = work2[k];
         }
