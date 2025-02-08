@@ -17,7 +17,7 @@ impl Mstl {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Error, Mstl};
+    use crate::{Error, Mstl, Stl};
 
     fn assert_in_delta(exp: f32, act: f32) {
         assert!((exp - act).abs() < 0.001);
@@ -188,5 +188,51 @@ mod tests {
             result.unwrap_err(),
             Error::Series("series has less than two periods".to_string())
         );
+    }
+
+    #[test]
+    fn test_seasonal_strength() {
+        let mut stl_params = Stl::params();
+        stl_params.seasonal_length(7);
+        let result = Mstl::params()
+            .stl_params(stl_params)
+            .fit(&generate_series(), &[7])
+            .unwrap();
+        assert_in_delta(0.284111676315015, result.seasonal_strength()[0]);
+    }
+
+    #[test]
+    fn test_seasonal_strength_max() {
+        let series = (0..30).map(|v| (v % 7) as f32).collect::<Vec<f32>>();
+        let mut stl_params = Stl::params();
+        stl_params.seasonal_length(7);
+        let result = Mstl::params()
+            .stl_params(stl_params)
+            .fit(&series, &[7])
+            .unwrap();
+        assert_in_delta(1.0, result.seasonal_strength()[0]);
+    }
+
+    #[test]
+    fn test_trend_strength() {
+        let mut stl_params = Stl::params();
+        stl_params.seasonal_length(7);
+        let result = Mstl::params()
+            .stl_params(stl_params)
+            .fit(&generate_series(), &[7])
+            .unwrap();
+        assert_in_delta(0.16384245231864702, result.trend_strength());
+    }
+
+    #[test]
+    fn test_trend_strength_max() {
+        let series = (0..30).map(|v| v as f32).collect::<Vec<f32>>();
+        let mut stl_params = Stl::params();
+        stl_params.seasonal_length(7);
+        let result = Mstl::params()
+            .stl_params(stl_params)
+            .fit(&series, &[7])
+            .unwrap();
+        assert_in_delta(1.0, result.trend_strength());
     }
 }
