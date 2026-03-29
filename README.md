@@ -28,15 +28,15 @@ let series = vec![
 ];
 let period = 7; // period of the seasonal component
 
-let res = Stl::fit(&series, period).unwrap();
+let fit = Stl::fit(&series, period).unwrap();
 ```
 
 Get the components
 
 ```rust
-res.seasonal();
-res.trend();
-res.remainder();
+fit.seasonal();
+fit.trend();
+fit.remainder();
 ```
 
 ## Robustness
@@ -44,13 +44,13 @@ res.remainder();
 Use robustness iterations
 
 ```rust
-let res = Stl::params().robust(true).fit(&series, period).unwrap();
+let fit = Stl::params().robust(true).fit(&series, period).unwrap();
 ```
 
 Get robustness weights
 
 ```rust
-res.weights();
+fit.weights();
 ```
 
 ## Multiple Seasonality
@@ -60,7 +60,7 @@ Specify multiple periods
 ```rust
 use stlrs::Mstl;
 
-let res = Mstl::fit(&series, &[7, 365]).unwrap();
+let fit = Mstl::fit(&series, &[7, 365]).unwrap();
 ```
 
 ## Parameters
@@ -98,13 +98,13 @@ Mstl::params()
 Get the seasonal strength
 
 ```rust
-res.seasonal_strength();
+fit.seasonal_strength();
 ```
 
 Get the trend strength
 
 ```rust
-res.trend_strength();
+fit.trend_strength();
 ```
 
 ## Credits
