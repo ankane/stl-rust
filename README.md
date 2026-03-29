@@ -68,7 +68,7 @@ let fit = Mstl::fit(&series, &[7, 365]).unwrap();
 Set STL parameters
 
 ```rust
-Stl::params()
+let fit = Stl::params()
     .seasonal_length(7)     // length of the seasonal smoother
     .trend_length(15)       // length of the trend smoother
     .low_pass_length(7)     // length of the low-pass filter
@@ -87,7 +87,7 @@ Stl::params()
 Set MSTL parameters
 
 ```rust
-Mstl::params()
+let fit = Mstl::params()
     .iterations(2)                   // number of iterations
     .lambda(0.5)                     // lambda for Box-Cox transformation
     .seasonal_lengths(&[11, 15])     // lengths of the seasonal smoothers
