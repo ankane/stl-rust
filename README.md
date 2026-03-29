@@ -81,6 +81,7 @@ Stl::params()
     .inner_loops(2)         // number of loops for updating the seasonal and trend components
     .outer_loops(0)         // number of iterations of robust fitting
     .robust(false)          // if robustness iterations are to be used
+    .fit(&series, period);
 ```
 
 Set MSTL parameters
@@ -91,6 +92,7 @@ Mstl::params()
     .lambda(0.5)                     // lambda for Box-Cox transformation
     .seasonal_lengths(&[11, 15])     // lengths of the seasonal smoothers
     .stl_params(Stl::params())       // STL params
+    .fit(&series, &periods);
 ```
 
 ## Strength
