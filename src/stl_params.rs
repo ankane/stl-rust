@@ -214,13 +214,13 @@ impl StlParams {
             ));
         }
 
-        debug_assert!(newns >= 3);
-        debug_assert!(nt >= 3);
-        debug_assert!(nl >= 3);
         debug_assert!(newnp >= 2);
         debug_assert!(newns % 2 == 1);
+        debug_assert!(newns >= 3);
         debug_assert!(nt % 2 == 1);
+        debug_assert!(nt >= 3);
         debug_assert!(nl % 2 == 1);
+        debug_assert!(nl >= 3);
 
         stl(
             series, newnp, newns, nt, nl, isdeg, itdeg, ildeg, nsjump, ntjump, nljump, ni, no,
