@@ -8,7 +8,6 @@
 
 pub fn stl(
     y: &[f32],
-    n: usize,
     np: usize,
     ns: usize,
     nt: usize,
@@ -25,6 +24,7 @@ pub fn stl(
     season: &mut [f32],
     trend: &mut [f32],
 ) {
+    let n = y.len();
     let mut work1 = vec![0.0; n + 2 * np];
     let mut work2 = vec![0.0; n + 2 * np];
     let mut work3 = vec![0.0; n + 2 * np];

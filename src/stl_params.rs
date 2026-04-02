@@ -126,10 +126,6 @@ impl StlParams {
         let isdeg = self.isdeg;
         let itdeg = self.itdeg;
 
-        let mut rw = vec![0.0; n];
-        let mut season = vec![0.0; n];
-        let mut trend = vec![0.0; n];
-
         let ildeg = self.ildeg.unwrap_or(itdeg);
         let mut newns = ns.max(3);
         if newns % 2 == 0 {
@@ -201,9 +197,12 @@ impl StlParams {
             return Err(Error::Parameter("low_pass_length must be odd".to_string()));
         }
 
+        let mut rw = vec![0.0; n];
+        let mut season = vec![0.0; n];
+        let mut trend = vec![0.0; n];
+
         stl(
             y,
-            n,
             newnp,
             newns,
             nt,
