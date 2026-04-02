@@ -1,5 +1,5 @@
-use std::error;
-use std::fmt;
+use core::error;
+use core::fmt;
 
 /// An error.
 #[derive(Debug, Eq, PartialEq)]

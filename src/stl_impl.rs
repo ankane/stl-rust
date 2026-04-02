@@ -6,6 +6,22 @@
 
 #![allow(clippy::too_many_arguments)]
 
+#[cfg(feature = "no_std")]
+use libm::sqrtf;
+
+#[cfg(not(feature = "no_std"))]
+fn sqrtf(x: f32) -> f32 {
+    x.sqrt()
+}
+
+fn pow2(x: f32) -> f32 {
+    x * x
+}
+
+fn pow3(x: f32) -> f32 {
+    x * x * x
+}
+
 pub fn stl(
     y: &[f32],
     np: usize,
@@ -103,7 +119,7 @@ fn ess(
         }
     } else if newnj == 1 {
         // newnj equal to one, len less than n
-        let nsh = (len + 1) / 2;
+        let nsh = len.div_ceil(2);
         nleft = 1;
         nright = len;
         for i in 1..=n {
@@ -131,7 +147,7 @@ fn ess(
         }
     } else {
         // newnj greater than one, len less than n
-        let nsh = (len + 1) / 2;
+        let nsh = len.div_ceil(2);
         let mut i = 1;
         while i <= n {
             // fitted value at i
@@ -234,7 +250,7 @@ fn est(
             if r <= h1 {
                 w[j - 1] = 1.0;
             } else {
-                w[j - 1] = (1.0 - (r / h).powi(3)).powi(3);
+                w[j - 1] = pow3(1.0 - pow3(r / h));
             }
             if userw {
                 w[j - 1] *= rw[j - 1];
@@ -262,9 +278,9 @@ fn est(
             let mut b = xs - a;
             let mut c = 0.0;
             for j in nleft..=nright {
-                c += w[j - 1] * ((j as f32) - a).powi(2);
+                c += w[j - 1] * pow2((j as f32) - a);
             }
-            if c.sqrt() > 0.001 * range {
+            if sqrtf(c) > 0.001 * range {
                 b /= c;
 
                 // points are spread out enough to compute slope
@@ -371,7 +387,7 @@ fn rwts(y: &[f32], n: usize, fit: &[f32], rw: &mut [f32]) {
         if r <= c1 {
             rw[i] = 1.0;
         } else if r <= c9 {
-            rw[i] = (1.0 - (r / cmad).powi(2)).powi(2);
+            rw[i] = pow2(1.0 - pow2(r / cmad));
         } else {
             rw[i] = 0.0;
         }

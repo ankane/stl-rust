@@ -1,3 +1,7 @@
+## 0.4.0 (unreleased)
+
+- Added experimental `no_std` feature
+
 ## 0.3.1 (2024-07-10)
 
 - Improved docs
