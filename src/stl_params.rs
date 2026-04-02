@@ -263,7 +263,7 @@ impl Default for StlParams {
 #[cfg(test)]
 #[cfg(feature = "no_std")]
 mod tests {
-    use crate::StlParams;
+    use crate::Stl;
 
     fn assert_in_delta(exp: f32, act: f32) {
         assert!((exp - act).abs() < 0.001);
@@ -288,16 +288,15 @@ mod tests {
         let mut weights = [0.0; 30];
         let mut work = [0.0; (30 + 2 * 7) * 5];
 
-        StlParams::new()
-            .fit(
-                &series,
-                7,
-                &mut seasonal,
-                &mut trend,
-                &mut weights,
-                &mut work,
-            )
-            .unwrap();
+        Stl::fit(
+            &series,
+            7,
+            &mut seasonal,
+            &mut trend,
+            &mut weights,
+            &mut work,
+        )
+        .unwrap();
         assert_elements_in_delta(
             &[0.36926576, 0.75655484, -1.3324139, 1.9553658, -0.6044802],
             &seasonal[..5],
