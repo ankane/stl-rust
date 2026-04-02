@@ -170,9 +170,19 @@ impl StlParams {
         weights: &mut [f32],
         work: &mut [f32],
     ) -> Result<(), Error> {
-        if series.len() / 2 < period {
+        let n = series.len();
+        let np = period;
+
+        if n / 2 < np {
             return Err(Error::Series);
         }
+        let np = np.max(2);
+
+        debug_assert!(seasonal.len() >= n);
+        debug_assert!(trend.len() >= n);
+        debug_assert!(weights.len() >= n);
+        debug_assert!(work.len() >= (n + 2 * np) * 5);
+
         self.fit_impl(series, period, seasonal, trend, weights, work)
     }
 
