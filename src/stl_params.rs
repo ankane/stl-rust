@@ -197,9 +197,9 @@ impl StlParams {
             return Err(Error::Parameter("low_pass_length must be odd".to_string()));
         }
 
-        let mut rw = vec![0.0; n];
-        let mut season = vec![0.0; n];
+        let mut seasonal = vec![0.0; n];
         let mut trend = vec![0.0; n];
+        let mut weights = vec![0.0; n];
 
         stl(
             y,
@@ -215,21 +215,21 @@ impl StlParams {
             nljump,
             ni,
             no,
-            &mut rw,
-            &mut season,
+            &mut weights,
+            &mut seasonal,
             &mut trend,
         );
 
         let mut remainder = Vec::with_capacity(n);
         for i in 0..n {
-            remainder.push(y[i] - season[i] - trend[i]);
+            remainder.push(y[i] - seasonal[i] - trend[i]);
         }
 
         Ok(StlResult {
-            seasonal: season,
+            seasonal,
             trend,
             remainder,
-            weights: rw,
+            weights,
         })
     }
 }
