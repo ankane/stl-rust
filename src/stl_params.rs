@@ -200,25 +200,6 @@ impl StlParams {
         let ntjump = self.ntjump.unwrap_or(((nt as f32) / 10.0).ceil() as usize);
         let nljump = self.nljump.unwrap_or(((nl as f32) / 10.0).ceil() as usize);
 
-        if newns < 3 {
-            return Err(Error::Parameter(
-                "seasonal_length must be at least 3".to_string(),
-            ));
-        }
-        if nt < 3 {
-            return Err(Error::Parameter(
-                "trend_length must be at least 3".to_string(),
-            ));
-        }
-        if nl < 3 {
-            return Err(Error::Parameter(
-                "low_pass_length must be at least 3".to_string(),
-            ));
-        }
-        if newnp < 2 {
-            return Err(Error::Parameter("period must be at least 2".to_string()));
-        }
-
         if isdeg != 0 && isdeg != 1 {
             return Err(Error::Parameter(
                 "seasonal_degree must be 0 or 1".to_string(),
@@ -232,6 +213,14 @@ impl StlParams {
                 "low_pass_degree must be 0 or 1".to_string(),
             ));
         }
+
+        debug_assert!(newns >= 3);
+        debug_assert!(nt >= 3);
+        debug_assert!(nl >= 3);
+        debug_assert!(newnp >= 2);
+        debug_assert!(newns % 2 == 1);
+        debug_assert!(nt % 2 == 1);
+        debug_assert!(nl % 2 == 1);
 
         stl(
             series, newnp, newns, nt, nl, isdeg, itdeg, ildeg, nsjump, ntjump, nljump, ni, no,
