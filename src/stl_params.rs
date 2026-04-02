@@ -111,9 +111,8 @@ impl StlParams {
 
     /// Decomposes a time series.
     pub fn fit(&self, series: &[f32], period: usize) -> Result<StlResult, Error> {
-        let y = series;
         let np = period;
-        let n = y.len();
+        let n = series.len();
 
         if n < np * 2 {
             return Err(Error::Series(
@@ -193,7 +192,7 @@ impl StlParams {
         let mut work = vec![0.0; (n + 2 * np) * 5];
 
         stl(
-            y,
+            series,
             newnp,
             newns,
             nt,
@@ -214,7 +213,7 @@ impl StlParams {
 
         let mut remainder = Vec::with_capacity(n);
         for i in 0..n {
-            remainder.push(y[i] - seasonal[i] - trend[i]);
+            remainder.push(series[i] - seasonal[i] - trend[i]);
         }
 
         Ok(StlResult {
