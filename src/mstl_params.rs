@@ -47,14 +47,10 @@ impl MstlParams {
 
     /// Decomposes a time series.
     pub fn fit(&self, series: &[f32], periods: &[usize]) -> Result<MstlResult, Error> {
-        // return error to be consistent with stl
-        // and ensure seasonal is always same length as periods
         if periods.iter().any(|&v| v < 2) {
             return Err(Error::Periods);
         }
 
-        // return error to be consistent with stl
-        // and ensure seasonal is always same length as periods
         for np in periods {
             if series.len() < np * 2 {
                 return Err(Error::Series);
