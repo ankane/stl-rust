@@ -187,16 +187,6 @@ impl StlParams {
             ));
         }
 
-        if newns % 2 != 1 {
-            return Err(Error::Parameter("seasonal_length must be odd".to_string()));
-        }
-        if nt % 2 != 1 {
-            return Err(Error::Parameter("trend_length must be odd".to_string()));
-        }
-        if nl % 2 != 1 {
-            return Err(Error::Parameter("low_pass_length must be odd".to_string()));
-        }
-
         let mut seasonal = vec![0.0; n];
         let mut trend = vec![0.0; n];
         let mut weights = vec![0.0; n];
