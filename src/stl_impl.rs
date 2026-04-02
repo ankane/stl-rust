@@ -23,13 +23,14 @@ pub fn stl(
     rw: &mut [f32],
     season: &mut [f32],
     trend: &mut [f32],
+    work: &mut [f32],
 ) {
     let n = y.len();
-    let mut work1 = vec![0.0; n + 2 * np];
-    let mut work2 = vec![0.0; n + 2 * np];
-    let mut work3 = vec![0.0; n + 2 * np];
-    let mut work4 = vec![0.0; n + 2 * np];
-    let mut work5 = vec![0.0; n + 2 * np];
+    let work_size = n + 2 * np;
+    let (work1, work) = work.split_at_mut(work_size);
+    let (work2, work) = work.split_at_mut(work_size);
+    let (work3, work) = work.split_at_mut(work_size);
+    let (work4, work5) = work.split_at_mut(work_size);
 
     let mut userw = false;
     let mut k = 0;
@@ -37,7 +38,7 @@ pub fn stl(
     loop {
         onestp(
             y, n, np, ns, nt, nl, isdeg, itdeg, ildeg, nsjump, ntjump, nljump, ni, userw, rw,
-            season, trend, &mut work1, &mut work2, &mut work3, &mut work4, &mut work5,
+            season, trend, work1, work2, work3, work4, work5,
         );
         k += 1;
         if k > no {
@@ -46,7 +47,7 @@ pub fn stl(
         for i in 0..n {
             work1[i] = trend[i] + season[i];
         }
-        rwts(y, n, &work1, rw);
+        rwts(y, n, work1, rw);
         userw = true;
     }
 

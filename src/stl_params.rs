@@ -200,6 +200,7 @@ impl StlParams {
         let mut seasonal = vec![0.0; n];
         let mut trend = vec![0.0; n];
         let mut weights = vec![0.0; n];
+        let mut work = vec![0.0; (n + 2 * np) * 5];
 
         stl(
             y,
@@ -218,6 +219,7 @@ impl StlParams {
             &mut weights,
             &mut seasonal,
             &mut trend,
+            &mut work,
         );
 
         let mut remainder = Vec::with_capacity(n);
