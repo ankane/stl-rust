@@ -111,10 +111,57 @@ impl StlParams {
 
     /// Decomposes a time series.
     pub fn fit(&self, series: &[f32], period: usize) -> Result<StlResult, Error> {
+        let n = series.len();
+        let np = period;
+
+        // check before allocating
+        if n / 2 < np {
+            return Err(Error::Series(
+                "series has less than two periods".to_string(),
+            ));
+        }
+        let np = np.max(2);
+
+        let mut seasonal = vec![0.0; n];
+        let mut trend = vec![0.0; n];
+        let mut weights = vec![0.0; n];
+        let mut work = vec![0.0; (n + 2 * np) * 5];
+
+        self.fit_impl(
+            series,
+            period,
+            &mut seasonal,
+            &mut trend,
+            &mut weights,
+            &mut work,
+        )?;
+
+        let mut remainder = Vec::with_capacity(n);
+        for i in 0..n {
+            remainder.push(series[i] - seasonal[i] - trend[i]);
+        }
+
+        Ok(StlResult {
+            seasonal,
+            trend,
+            remainder,
+            weights,
+        })
+    }
+
+    fn fit_impl(
+        &self,
+        series: &[f32],
+        period: usize,
+        seasonal: &mut [f32],
+        trend: &mut [f32],
+        weights: &mut [f32],
+        work: &mut [f32],
+    ) -> Result<(), Error> {
         let np = period;
         let n = series.len();
 
-        if n < np * 2 {
+        if n / 2 < np {
             return Err(Error::Series(
                 "series has less than two periods".to_string(),
             ));
@@ -186,42 +233,12 @@ impl StlParams {
             ));
         }
 
-        let mut seasonal = vec![0.0; n];
-        let mut trend = vec![0.0; n];
-        let mut weights = vec![0.0; n];
-        let mut work = vec![0.0; (n + 2 * np) * 5];
-
         stl(
-            series,
-            newnp,
-            newns,
-            nt,
-            nl,
-            isdeg,
-            itdeg,
-            ildeg,
-            nsjump,
-            ntjump,
-            nljump,
-            ni,
-            no,
-            &mut weights,
-            &mut seasonal,
-            &mut trend,
-            &mut work,
+            series, newnp, newns, nt, nl, isdeg, itdeg, ildeg, nsjump, ntjump, nljump, ni, no,
+            weights, seasonal, trend, work,
         );
 
-        let mut remainder = Vec::with_capacity(n);
-        for i in 0..n {
-            remainder.push(series[i] - seasonal[i] - trend[i]);
-        }
-
-        Ok(StlResult {
-            seasonal,
-            trend,
-            remainder,
-            weights,
-        })
+        Ok(())
     }
 }
 
