@@ -101,19 +101,33 @@ mod tests {
     #[test]
     fn test_too_few_periods() {
         let result = Stl::params().fit(&generate_series(), 16);
-        assert_eq!(
-            result.unwrap_err(),
-            Error::Series("series has less than two periods".to_string())
-        );
+        let err = result.unwrap_err();
+        assert_eq!(err, Error::Series);
+        assert_eq!(err.to_string(), "series has less than two periods");
     }
 
     #[test]
     fn test_bad_seasonal_degree() {
         let result = Stl::params().seasonal_degree(2).fit(&generate_series(), 7);
-        assert_eq!(
-            result.unwrap_err(),
-            Error::Parameter("seasonal_degree must be 0 or 1".to_string())
-        );
+        let err = result.unwrap_err();
+        assert_eq!(err, Error::SeasonalDegree);
+        assert_eq!(err.to_string(), "seasonal_degree must be 0 or 1");
+    }
+
+    #[test]
+    fn test_bad_trend_degree() {
+        let result = Stl::params().trend_degree(2).fit(&generate_series(), 7);
+        let err = result.unwrap_err();
+        assert_eq!(err, Error::TrendDegree);
+        assert_eq!(err.to_string(), "trend_degree must be 0 or 1");
+    }
+
+    #[test]
+    fn test_bad_low_pass_degree() {
+        let result = Stl::params().low_pass_degree(2).fit(&generate_series(), 7);
+        let err = result.unwrap_err();
+        assert_eq!(err, Error::LowPassDegree);
+        assert_eq!(err.to_string(), "low_pass_degree must be 0 or 1");
     }
 
     #[test]

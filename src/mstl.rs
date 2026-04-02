@@ -156,38 +156,34 @@ mod tests {
     #[test]
     fn test_lambda_out_of_range() {
         let result = Mstl::params().lambda(2.0).fit(&generate_series(), &[6, 10]);
-        assert_eq!(
-            result.unwrap_err(),
-            Error::Parameter("lambda must be between 0 and 1".to_string())
-        );
+        let err = result.unwrap_err();
+        assert_eq!(err, Error::Lambda);
+        assert_eq!(err.to_string(), "lambda must be between 0 and 1");
     }
 
     #[test]
     fn test_empty_periods() {
         let periods: Vec<usize> = Vec::new();
         let result = Mstl::fit(&generate_series(), &periods);
-        assert_eq!(
-            result.unwrap_err(),
-            Error::Parameter("periods must not be empty".to_string())
-        );
+        let err = result.unwrap_err();
+        assert_eq!(err, Error::EmptyPeriods);
+        assert_eq!(err.to_string(), "periods must not be empty");
     }
 
     #[test]
     fn test_period_one() {
         let result = Mstl::fit(&generate_series(), &[1]);
-        assert_eq!(
-            result.unwrap_err(),
-            Error::Parameter("periods must be at least 2".to_string())
-        );
+        let err = result.unwrap_err();
+        assert_eq!(err, Error::Periods);
+        assert_eq!(err.to_string(), "periods must be at least 2");
     }
 
     #[test]
     fn test_too_few_periods() {
         let result = Mstl::fit(&generate_series(), &[16]);
-        assert_eq!(
-            result.unwrap_err(),
-            Error::Series("series has less than two periods".to_string())
-        );
+        let err = result.unwrap_err();
+        assert_eq!(err, Error::Series);
+        assert_eq!(err.to_string(), "series has less than two periods");
     }
 
     #[test]

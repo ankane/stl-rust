@@ -70,7 +70,7 @@ pub fn mstl(
         }
     } else {
         // TODO use Friedman's Super Smoother for trend
-        return Err(Error::Parameter("periods must not be empty".to_string()));
+        return Err(Error::EmptyPeriods);
     }
 
     let mut remainder = Vec::with_capacity(k);

@@ -50,32 +50,26 @@ impl MstlParams {
         // return error to be consistent with stl
         // and ensure seasonal is always same length as periods
         if periods.iter().any(|&v| v < 2) {
-            return Err(Error::Parameter("periods must be at least 2".to_string()));
+            return Err(Error::Periods);
         }
 
         // return error to be consistent with stl
         // and ensure seasonal is always same length as periods
         for np in periods {
             if series.len() < np * 2 {
-                return Err(Error::Series(
-                    "series has less than two periods".to_string(),
-                ));
+                return Err(Error::Series);
             }
         }
 
         if let Some(lambda) = self.lambda {
             if !(0.0..=1.0).contains(&lambda) {
-                return Err(Error::Parameter(
-                    "lambda must be between 0 and 1".to_string(),
-                ));
+                return Err(Error::Lambda);
             }
         }
 
         if let Some(swin) = &self.swin {
             if swin.len() != periods.len() {
-                return Err(Error::Parameter(
-                    "seasonal_lengths must have the same length as periods".to_string(),
-                ));
+                return Err(Error::SeasonalLengths);
             }
         }
 

@@ -116,9 +116,7 @@ impl StlParams {
 
         // check before allocating
         if n / 2 < np {
-            return Err(Error::Series(
-                "series has less than two periods".to_string(),
-            ));
+            return Err(Error::Series);
         }
         let np = np.max(2);
 
@@ -162,9 +160,7 @@ impl StlParams {
         let n = series.len();
 
         if n / 2 < np {
-            return Err(Error::Series(
-                "series has less than two periods".to_string(),
-            ));
+            return Err(Error::Series);
         }
 
         let ns = self.ns.unwrap_or(np);
@@ -201,17 +197,13 @@ impl StlParams {
         let nljump = self.nljump.unwrap_or(((nl as f32) / 10.0).ceil() as usize);
 
         if isdeg != 0 && isdeg != 1 {
-            return Err(Error::Parameter(
-                "seasonal_degree must be 0 or 1".to_string(),
-            ));
+            return Err(Error::SeasonalDegree);
         }
         if itdeg != 0 && itdeg != 1 {
-            return Err(Error::Parameter("trend_degree must be 0 or 1".to_string()));
+            return Err(Error::TrendDegree);
         }
         if ildeg != 0 && ildeg != 1 {
-            return Err(Error::Parameter(
-                "low_pass_degree must be 0 or 1".to_string(),
-            ));
+            return Err(Error::LowPassDegree);
         }
 
         debug_assert!(newnp >= 2);
