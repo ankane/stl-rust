@@ -1,8 +1,11 @@
 use super::stl_impl::stl;
 use super::{Error, Float};
 
-#[cfg(feature = "std")]
+#[cfg(feature = "alloc")]
 use super::StlResult;
+
+#[cfg(feature = "alloc")]
+use alloc::{vec, vec::Vec};
 
 #[cfg(feature = "std")]
 fn ceil(x: f32) -> f32 {
@@ -121,7 +124,7 @@ impl StlParams {
     }
 
     /// Decomposes a time series.
-    #[cfg(feature = "std")]
+    #[cfg(feature = "alloc")]
     pub fn fit<T: Float>(&self, series: &[T], period: usize) -> Result<StlResult<T>, Error> {
         let n = series.len();
         let np = period;
@@ -160,7 +163,7 @@ impl StlParams {
     }
 
     /// Decomposes a time series.
-    #[cfg(not(feature = "std"))]
+    #[cfg(not(feature = "alloc"))]
     pub fn fit<T: Float>(
         &self,
         series: &[T],

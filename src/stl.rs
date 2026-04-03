@@ -1,6 +1,6 @@
 use super::{Error, Float, StlParams};
 
-#[cfg(feature = "std")]
+#[cfg(feature = "alloc")]
 use super::StlResult;
 
 /// Seasonal-trend decomposition using Loess (STL).
@@ -8,13 +8,13 @@ pub struct Stl;
 
 impl Stl {
     /// Decomposes a time series.
-    #[cfg(feature = "std")]
+    #[cfg(feature = "alloc")]
     pub fn fit<T: Float>(series: &[T], period: usize) -> Result<StlResult<T>, Error> {
         StlParams::new().fit(series, period)
     }
 
     /// Decomposes a time series.
-    #[cfg(not(feature = "std"))]
+    #[cfg(not(feature = "alloc"))]
     pub fn fit<T: Float>(
         series: &[T],
         period: usize,
@@ -33,9 +33,10 @@ impl Stl {
 }
 
 #[cfg(test)]
-#[cfg(feature = "std")]
+#[cfg(feature = "alloc")]
 mod tests {
     use crate::{Error, Float, Stl};
+    use alloc::{vec, vec::Vec, string::ToString};
 
     fn assert_in_delta<T: Float>(exp: T, act: T) {
         assert!((exp - act).abs() < T::from_f64(0.001));
@@ -206,7 +207,7 @@ mod tests {
 }
 
 #[cfg(test)]
-#[cfg(not(feature = "std"))]
+#[cfg(not(feature = "alloc"))]
 mod tests {
     use crate::{Float, Stl};
 
