@@ -23,10 +23,8 @@ pub trait Float:
 
     fn abs(&self) -> Self;
     fn as_f64(&self) -> f64;
-    #[cfg(feature = "std")]
     fn ln(&self) -> Self;
     fn max(&self, x: Self) -> Self;
-    #[cfg(feature = "std")]
     fn powf(&self, x: Self) -> Self;
     fn sqrt(&self) -> Self;
 }
@@ -61,6 +59,11 @@ impl Float for f32 {
         f32::ln(*self)
     }
 
+    #[cfg(not(feature = "std"))]
+    fn ln(&self) -> Self {
+        todo!()
+    }
+
     fn max(&self, x: Self) -> Self {
         f32::max(*self, x)
     }
@@ -68,6 +71,11 @@ impl Float for f32 {
     #[cfg(feature = "std")]
     fn powf(&self, x: Self) -> Self {
         f32::powf(*self, x)
+    }
+
+    #[cfg(not(feature = "std"))]
+    fn powf(&self, _x: Self) -> Self {
+        todo!()
     }
 
     #[cfg(feature = "std")]
@@ -111,6 +119,11 @@ impl Float for f64 {
         f64::ln(*self)
     }
 
+    #[cfg(not(feature = "std"))]
+    fn ln(&self) -> Self {
+        todo!()
+    }
+
     fn max(&self, x: Self) -> Self {
         f64::max(*self, x)
     }
@@ -118,6 +131,11 @@ impl Float for f64 {
     #[cfg(feature = "std")]
     fn powf(&self, x: Self) -> Self {
         f64::powf(*self, x)
+    }
+
+    #[cfg(not(feature = "std"))]
+    fn powf(&self, _x: Self) -> Self {
+        todo!()
     }
 
     #[cfg(feature = "std")]
