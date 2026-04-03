@@ -204,8 +204,8 @@ impl StlParams {
 
         let isdeg = self.isdeg;
         let itdeg = self.itdeg;
-
         let ildeg = self.ildeg.unwrap_or(itdeg);
+
         let mut newns = ns.max(3);
         if newns % 2 == 0 {
             newns += 1;
