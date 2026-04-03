@@ -1,4 +1,4 @@
-use super::float::Float;
+use super::Float;
 
 /// A STL result.
 #[derive(Clone, Debug)]

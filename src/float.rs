@@ -1,6 +1,8 @@
 use core::iter::Sum;
 use core::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
+// TODO seal?
+#[doc(hidden)]
 pub trait Float:
     Add<Output = Self>
     + AddAssign

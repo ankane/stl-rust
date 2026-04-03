@@ -2,8 +2,7 @@
 // MSTL: A Seasonal-Trend Decomposition Algorithm for Time Series with Multiple Seasonal Patterns.
 // arXiv:2107.13462 [stat.AP]. https://doi.org/10.48550/arXiv.2107.13462
 
-use super::float::Float;
-use super::{Error, StlParams};
+use super::{Error, Float, StlParams};
 
 #[allow(clippy::too_many_arguments)]
 pub fn mstl<T: Float>(

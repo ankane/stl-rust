@@ -1,6 +1,5 @@
-use super::float::Float;
 use super::stl_impl::stl;
-use super::Error;
+use super::{Error, Float};
 
 #[cfg(feature = "std")]
 use super::StlResult;

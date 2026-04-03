@@ -1,5 +1,5 @@
-use super::float::Float;
 use super::stl_result::strength;
+use super::Float;
 
 /// A MSTL result.
 #[derive(Clone, Debug)]

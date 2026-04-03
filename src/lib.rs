@@ -20,6 +20,7 @@ mod mstl_result;
 mod stl_result;
 
 pub use error::Error;
+pub use float::Float;
 pub use stl::Stl;
 pub use stl_params::StlParams;
 

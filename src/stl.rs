@@ -1,5 +1,4 @@
-use super::float::Float;
-use super::{Error, StlParams};
+use super::{Error, Float, StlParams};
 
 #[cfg(feature = "std")]
 use super::StlResult;

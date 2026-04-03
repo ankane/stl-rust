@@ -1,6 +1,5 @@
-use super::float::Float;
 use super::mstl_impl::mstl;
-use super::{Error, MstlResult, StlParams};
+use super::{Error, Float, MstlResult, StlParams};
 
 /// A set of MSTL parameters.
 #[derive(Clone, Debug)]

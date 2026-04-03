@@ -1,5 +1,4 @@
-use super::float::Float;
-use super::{Error, MstlParams, MstlResult};
+use super::{Error, Float, MstlParams, MstlResult};
 
 /// Multiple seasonal-trend decomposition using Loess (MSTL).
 pub struct Mstl;

@@ -6,7 +6,7 @@
 
 #![allow(clippy::too_many_arguments)]
 
-use super::float::Float;
+use super::Float;
 
 fn pow2<T: Float>(x: T) -> T {
     x * x
