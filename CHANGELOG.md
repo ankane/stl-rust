@@ -2,6 +2,7 @@
 
 - Added support for `f64`
 - Added `std` feature
+- Added experimental support for `no_std`
 - Changed `seasonal_strength` and `trend_strength` methods to return `f64` instead of `f32`
 
 ## 0.3.1 (2024-07-10)
