@@ -202,18 +202,17 @@ impl StlParams {
             return Err(Error::Period);
         }
 
-        let np = period;
+        let newnp = period;
 
         let isdeg = self.isdeg;
         let itdeg = self.itdeg;
         let ildeg = self.ildeg.unwrap_or(itdeg);
 
-        let mut newns = self.ns.unwrap_or(np).max(3);
+        let mut newns = self.ns.unwrap_or(newnp).max(3);
         if newns % 2 == 0 {
             newns += 1;
         }
 
-        let newnp = np;
         let mut nt = self
             .nt
             .unwrap_or_else(|| ceil((1.5 * newnp as f32) / (1.0 - 1.5 / newns as f32)) as usize)
