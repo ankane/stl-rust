@@ -17,21 +17,12 @@ impl Mstl {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Error, Float, Mstl, Stl};
+    use crate::{Error, Mstl, Stl};
 
     #[cfg(feature = "alloc")]
     use alloc::{string::ToString, vec, vec::Vec};
 
-    fn assert_in_delta<T: Float>(exp: T, act: T) {
-        assert!((exp - act).abs() < T::from_f64(0.001));
-    }
-
-    fn assert_elements_in_delta<T: Float>(exp: &[T], act: &[T]) {
-        assert_eq!(exp.len(), act.len());
-        for i in 0..exp.len() {
-            assert_in_delta(exp[i], act[i]);
-        }
-    }
+    use crate::stl::test_helpers::*;
 
     fn generate_series() -> Vec<f32> {
         return vec![

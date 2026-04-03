@@ -33,21 +33,27 @@ impl Stl {
 }
 
 #[cfg(test)]
-#[cfg(feature = "alloc")]
-mod tests {
-    use crate::{Error, Float, Stl};
-    use alloc::{string::ToString, vec, vec::Vec};
+pub(crate) mod test_helpers {
+    use crate::Float;
 
-    fn assert_in_delta<T: Float>(exp: T, act: T) {
+    pub(crate) fn assert_in_delta<T: Float>(exp: T, act: T) {
         assert!((exp - act).abs() < T::from_f64(0.001));
     }
 
-    fn assert_elements_in_delta<T: Float>(exp: &[T], act: &[T]) {
+    pub(crate) fn assert_elements_in_delta<T: Float>(exp: &[T], act: &[T]) {
         assert_eq!(exp.len(), act.len());
         for i in 0..exp.len() {
             assert_in_delta(exp[i], act[i]);
         }
     }
+}
+
+#[cfg(test)]
+#[cfg(feature = "alloc")]
+mod tests {
+    use crate::stl::test_helpers::*;
+    use crate::{Error, Stl};
+    use alloc::{string::ToString, vec, vec::Vec};
 
     fn generate_series() -> Vec<f32> {
         return vec![
@@ -209,18 +215,8 @@ mod tests {
 #[cfg(test)]
 #[cfg(not(feature = "alloc"))]
 mod tests {
-    use crate::{Float, Stl};
-
-    fn assert_in_delta<T: Float>(exp: T, act: T) {
-        assert!((exp - act).abs() < T::from_f64(0.001));
-    }
-
-    fn assert_elements_in_delta<T: Float>(exp: &[T], act: &[T]) {
-        assert_eq!(exp.len(), act.len());
-        for i in 0..exp.len() {
-            assert_in_delta(exp[i], act[i]);
-        }
-    }
+    use crate::stl::test_helpers::*;
+    use crate::Stl;
 
     #[test]
     fn test_works() {
