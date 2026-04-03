@@ -38,6 +38,8 @@ pub fn mstl<T: Float>(
         x.to_vec()
     };
 
+    let mut params = stl_params.clone();
+
     for j in 0..iterate {
         for (i, &idx) in indices.iter().enumerate() {
             if j > 0 {
@@ -46,7 +48,6 @@ pub fn mstl<T: Float>(
                 }
             }
 
-            let mut params = stl_params.clone();
             if let Some(sw) = &swin {
                 params.seasonal_length(sw[idx]);
             } else if stl_params.ns.is_none() {
