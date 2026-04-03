@@ -5,7 +5,9 @@ use super::Error;
 use super::StlResult;
 
 #[cfg(feature = "no_std")]
-use libm::ceilf;
+fn ceilf(x: f32) -> f32 {
+    core::f32::math::ceil(x)
+}
 
 #[cfg(not(feature = "no_std"))]
 fn ceilf(x: f32) -> f32 {

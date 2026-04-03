@@ -13,7 +13,6 @@ readme = "README.md"
 doctest = false
 
 [dependencies]
-libm = { version = "0.2", optional = true }
 
 [features]
-no_std = ["libm"]
+no_std = []
