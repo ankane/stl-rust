@@ -55,9 +55,6 @@ pub fn mstl(
                     params.seasonal_length(7 + 4 * (i + 1));
                 }
 
-                // TODO confirm needed
-                seasonality[idx].fill(0.0);
-                trend.fill(0.0);
                 let mut weights = vec![0.0; k];
                 let mut work = vec![0.0; (k + 2 * seas_ids[idx]) * 5];
 

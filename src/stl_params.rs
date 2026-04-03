@@ -249,6 +249,12 @@ impl StlParams {
         debug_assert!(nl % 2 == 1);
         debug_assert!(nl >= 3);
 
+        // TODO confirm needed
+        seasonal.fill(0.0);
+        trend.fill(0.0);
+        weights.fill(0.0);
+        work.fill(0.0);
+
         stl(
             series, newnp, newns, nt, nl, isdeg, itdeg, ildeg, nsjump, ntjump, nljump, ni, no,
             weights, seasonal, trend, work,
