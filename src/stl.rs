@@ -231,4 +231,42 @@ mod tests {
         );
         assert_elements_in_delta(&[1.0, 1.0, 1.0, 1.0, 1.0], &weights[..5]);
     }
+
+    #[test]
+    fn test_robust() {
+        let series = [
+            5.0, 9.0, 2.0, 9.0, 0.0, 6.0, 3.0, 8.0, 5.0, 8.0, 7.0, 8.0, 8.0, 0.0, 2.0, 5.0, 0.0,
+            5.0, 6.0, 7.0, 3.0, 6.0, 1.0, 4.0, 4.0, 4.0, 3.0, 7.0, 5.0, 8.0,
+        ];
+        // make non-zero to test correctness
+        let mut seasonal = [1.0; 30];
+        let mut trend = [2.0; 30];
+        let mut weights = [3.0; 30];
+        let mut work = [4.0; (30 + 2 * 7) * 5];
+
+        Stl::params()
+            .robust(true)
+            .fit(
+                &series,
+                7,
+                &mut seasonal,
+                &mut trend,
+                &mut weights,
+                &mut work,
+            )
+            .unwrap();
+
+        assert_elements_in_delta(
+            &[0.14922355, 0.47939026, -1.833231, 1.7411387, 0.8200711],
+            &seasonal[..5],
+        );
+        assert_elements_in_delta(
+            &[5.397365, 5.4745436, 5.5517216, 5.6499176, 5.748114],
+            &trend[..5],
+        );
+        assert_elements_in_delta(
+            &[0.99374926, 0.8129377, 0.9385952, 0.9458036, 0.29742217],
+            &weights[..5],
+        );
+    }
 }
