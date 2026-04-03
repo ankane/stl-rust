@@ -59,7 +59,7 @@ impl MstlParams {
         }
 
         for np in periods {
-            if series.len() < np * 2 {
+            if series.len() / 2 < *np {
                 return Err(Error::Series);
             }
         }
