@@ -69,13 +69,19 @@ impl MstlParams {
             }
         }
 
-        let (trend, remainder, seasonal) = mstl(
+        let n = series.len();
+        let mut trend = vec![0.0; n];
+        let mut remainder = vec![0.0; n];
+
+        let seasonal = mstl(
             series,
             periods,
             self.iterate,
             self.lambda,
             &self.swin,
             &self.stl_params,
+            &mut trend,
+            &mut remainder,
         )?;
 
         Ok(MstlResult {

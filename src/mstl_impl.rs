@@ -4,7 +4,7 @@
 
 use super::{Error, StlParams};
 
-#[allow(clippy::type_complexity)]
+#[allow(clippy::too_many_arguments)]
 pub fn mstl(
     x: &[f32],
     seas_ids: &[usize],
@@ -12,7 +12,9 @@ pub fn mstl(
     lambda: Option<f32>,
     swin: &Option<Vec<usize>>,
     stl_params: &StlParams,
-) -> Result<(Vec<f32>, Vec<f32>, Vec<Vec<f32>>), Error> {
+    trend: &mut [f32],
+    remainder: &mut [f32],
+) -> Result<Vec<Vec<f32>>, Error> {
     let k = x.len();
 
     // keep track of indices instead of sorting seas_ids
@@ -26,7 +28,6 @@ pub fn mstl(
     }
 
     let mut seasonality = Vec::with_capacity(seas_ids.len());
-    let mut trend = Vec::new();
 
     let mut deseas = if let Some(lam) = lambda {
         box_cox(x, lam)
@@ -61,7 +62,10 @@ pub fn mstl(
                         .fit(&deseas, seas_ids[idx])?
                 };
 
-                (seasonality[idx], trend, _, _) = fit.into_parts();
+                // TODO avoid unnecessary allocations
+                let td;
+                (seasonality[idx], td, _, _) = fit.into_parts();
+                trend.copy_from_slice(&td);
 
                 for (d, s) in deseas.iter_mut().zip(&seasonality[idx]) {
                     *d -= s;
@@ -73,12 +77,11 @@ pub fn mstl(
         return Err(Error::EmptyPeriods);
     }
 
-    let mut remainder = Vec::with_capacity(k);
     for i in 0..k {
-        remainder.push(deseas[i] - trend[i]);
+        remainder[i] = deseas[i] - trend[i];
     }
 
-    Ok((trend, remainder, seasonality))
+    Ok(seasonality)
 }
 
 fn box_cox(y: &[f32], lambda: f32) -> Vec<f32> {
