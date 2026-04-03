@@ -129,8 +129,8 @@ mod tests {
         );
     }
 
-    #[cfg_attr(not(feature = "std"), ignore)]
     #[test]
+    #[cfg_attr(not(feature = "std"), ignore)]
     fn test_lambda() {
         let result = Mstl::params()
             .lambda(0.5)
@@ -154,8 +154,8 @@ mod tests {
         );
     }
 
-    #[cfg_attr(not(feature = "std"), ignore)]
     #[test]
+    #[cfg_attr(not(feature = "std"), ignore)]
     fn test_lambda_zero() {
         let series: Vec<f32> = generate_series().iter().map(|&v| v + 1.0).collect();
         let result = Mstl::params().lambda(0.0).fit(&series, &[6, 10]).unwrap();
