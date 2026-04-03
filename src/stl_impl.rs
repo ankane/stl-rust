@@ -7,12 +7,10 @@
 #![allow(clippy::too_many_arguments)]
 
 #[cfg(not(feature = "std"))]
-fn sqrtf(x: f32) -> f32 {
-    core::f32::math::sqrt(x)
-}
+use core::f32::math::sqrt;
 
 #[cfg(feature = "std")]
-fn sqrtf(x: f32) -> f32 {
+fn sqrt(x: f32) -> f32 {
     x.sqrt()
 }
 
@@ -282,7 +280,7 @@ fn est(
             for j in nleft..=nright {
                 c += w[j - 1] * pow2((j as f32) - a);
             }
-            if sqrtf(c) > 0.001 * range {
+            if sqrt(c) > 0.001 * range {
                 b /= c;
 
                 // points are spread out enough to compute slope

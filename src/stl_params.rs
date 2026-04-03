@@ -5,12 +5,10 @@ use super::Error;
 use super::StlResult;
 
 #[cfg(not(feature = "std"))]
-fn ceilf(x: f32) -> f32 {
-    core::f32::math::ceil(x)
-}
+use core::f32::math::ceil;
 
 #[cfg(feature = "std")]
-fn ceilf(x: f32) -> f32 {
+fn ceil(x: f32) -> f32 {
     x.ceil()
 }
 
@@ -214,7 +212,7 @@ impl StlParams {
         }
 
         let newnp = np;
-        let mut nt = ceilf((1.5 * newnp as f32) / (1.0 - 1.5 / newns as f32)) as usize;
+        let mut nt = ceil((1.5 * newnp as f32) / (1.0 - 1.5 / newns as f32)) as usize;
         nt = self.nt.unwrap_or(nt);
         nt = nt.max(3);
         if nt % 2 == 0 {
@@ -229,9 +227,9 @@ impl StlParams {
         let ni = self.ni.unwrap_or(if self.robust { 1 } else { 2 });
         let no = self.no.unwrap_or(if self.robust { 15 } else { 0 });
 
-        let nsjump = self.nsjump.unwrap_or(ceilf((newns as f32) / 10.0) as usize);
-        let ntjump = self.ntjump.unwrap_or(ceilf((nt as f32) / 10.0) as usize);
-        let nljump = self.nljump.unwrap_or(ceilf((nl as f32) / 10.0) as usize);
+        let nsjump = self.nsjump.unwrap_or(ceil((newns as f32) / 10.0) as usize);
+        let ntjump = self.ntjump.unwrap_or(ceil((nt as f32) / 10.0) as usize);
+        let nljump = self.nljump.unwrap_or(ceil((nl as f32) / 10.0) as usize);
 
         if isdeg != 0 && isdeg != 1 {
             return Err(Error::SeasonalDegree);
