@@ -186,7 +186,7 @@ impl StlParams {
         self.fit_impl(series, period, seasonal, trend, weights, work)
     }
 
-    fn fit_impl(
+    pub(crate) fn fit_impl(
         &self,
         series: &[f32],
         period: usize,

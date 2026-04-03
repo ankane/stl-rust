@@ -37,7 +37,7 @@ pub fn mstl(
 
     if !seas_ids.is_empty() {
         for _ in 0..seas_ids.len() {
-            seasonality.push(Vec::new());
+            seasonality.push(vec![0.0; k]);
         }
 
         for j in 0..iterate {
@@ -51,16 +51,24 @@ pub fn mstl(
                 let mut params = stl_params.clone();
                 if let Some(sw) = &swin {
                     params.seasonal_length(sw[idx]);
-                } else if !stl_params.ns.is_some() {
+                } else if stl_params.ns.is_none() {
                     params.seasonal_length(7 + 4 * (i + 1));
                 }
 
-                let fit = params.fit(&deseas, seas_ids[idx])?;
+                // TODO confirm needed
+                seasonality[idx].fill(0.0);
+                trend.fill(0.0);
+                let mut weights = vec![0.0; k];
+                let mut work = vec![0.0; (k + 2 * seas_ids[idx]) * 5];
 
-                // TODO avoid unnecessary allocations
-                let td;
-                (seasonality[idx], td, _, _) = fit.into_parts();
-                trend.copy_from_slice(&td);
+                params.fit_impl(
+                    &deseas,
+                    seas_ids[idx],
+                    &mut seasonality[idx],
+                    trend,
+                    &mut weights,
+                    &mut work,
+                )?;
 
                 for (d, s) in deseas.iter_mut().zip(&seasonality[idx]) {
                     *d -= s;
