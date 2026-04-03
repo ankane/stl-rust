@@ -12,9 +12,10 @@ pub fn mstl(
     lambda: Option<f32>,
     swin: &Option<Vec<usize>>,
     stl_params: &StlParams,
+    seasonality: &mut [Vec<f32>],
     trend: &mut [f32],
     remainder: &mut [f32],
-) -> Result<Vec<Vec<f32>>, Error> {
+) -> Result<(), Error> {
     let k = x.len();
 
     // keep track of indices instead of sorting seas_ids
@@ -27,17 +28,11 @@ pub fn mstl(
         iterate = 1;
     }
 
-    let mut seasonality = Vec::with_capacity(seas_ids.len());
-
     let mut deseas = if let Some(lam) = lambda {
         box_cox(x, lam)
     } else {
         x.to_vec()
     };
-
-    for _ in 0..seas_ids.len() {
-        seasonality.push(vec![0.0; k]);
-    }
 
     for j in 0..iterate {
         for (i, &idx) in indices.iter().enumerate() {
@@ -76,7 +71,7 @@ pub fn mstl(
         remainder[i] = deseas[i] - trend[i];
     }
 
-    Ok(seasonality)
+    Ok(())
 }
 
 fn box_cox(y: &[f32], lambda: f32) -> Vec<f32> {

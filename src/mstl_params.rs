@@ -75,16 +75,21 @@ impl MstlParams {
         }
 
         let n = series.len();
+        let mut seasonal = Vec::with_capacity(periods.len());
+        for _ in 0..periods.len() {
+            seasonal.push(vec![0.0; n]);
+        }
         let mut trend = vec![0.0; n];
         let mut remainder = vec![0.0; n];
 
-        let seasonal = mstl(
+        mstl(
             series,
             periods,
             self.iterate,
             self.lambda,
             &self.swin,
             &self.stl_params,
+            &mut seasonal,
             &mut trend,
             &mut remainder,
         )?;
