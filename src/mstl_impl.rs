@@ -48,19 +48,14 @@ pub fn mstl(
                     }
                 }
 
-                let fit = if let Some(sw) = &swin {
-                    stl_params
-                        .clone()
-                        .seasonal_length(sw[idx])
-                        .fit(&deseas, seas_ids[idx])?
-                } else if stl_params.ns.is_some() {
-                    stl_params.fit(&deseas, seas_ids[idx])?
-                } else {
-                    stl_params
-                        .clone()
-                        .seasonal_length(7 + 4 * (i + 1))
-                        .fit(&deseas, seas_ids[idx])?
-                };
+                let mut params = stl_params.clone();
+                if let Some(sw) = &swin {
+                    params.seasonal_length(sw[idx]);
+                } else if !stl_params.ns.is_some() {
+                    params.seasonal_length(7 + 4 * (i + 1));
+                }
+
+                let fit = params.fit(&deseas, seas_ids[idx])?;
 
                 // TODO avoid unnecessary allocations
                 let td;
