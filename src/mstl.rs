@@ -17,8 +17,7 @@ impl Mstl {
 
 #[cfg(test)]
 mod tests {
-    use crate::float::Float;
-    use crate::{Error, Mstl, Stl};
+    use crate::{Error, Float, Mstl, Stl};
 
     fn assert_in_delta<T: Float>(exp: T, act: T) {
         assert!((exp - act).abs() < T::from_f64(0.001));

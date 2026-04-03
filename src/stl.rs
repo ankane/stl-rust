@@ -35,8 +35,7 @@ impl Stl {
 #[cfg(test)]
 #[cfg(feature = "std")]
 mod tests {
-    use crate::float::Float;
-    use crate::{Error, Stl};
+    use crate::{Error, Float, Stl};
 
     fn assert_in_delta<T: Float>(exp: T, act: T) {
         assert!((exp - act).abs() < T::from_f64(0.001));
@@ -209,8 +208,7 @@ mod tests {
 #[cfg(test)]
 #[cfg(not(feature = "std"))]
 mod tests {
-    use crate::float::Float;
-    use crate::Stl;
+    use crate::{Float, Stl};
 
     fn assert_in_delta<T: Float>(exp: T, act: T) {
         assert!((exp - act).abs() < T::from_f64(0.001));
