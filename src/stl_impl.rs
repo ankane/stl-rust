@@ -8,14 +8,6 @@
 
 use super::Float;
 
-fn pow2<T: Float>(x: T) -> T {
-    x * x
-}
-
-fn pow3<T: Float>(x: T) -> T {
-    x * x * x
-}
-
 pub fn stl<T: Float>(
     y: &[T],
     np: usize,
@@ -463,4 +455,12 @@ fn ss<T: Float>(
             season[(m - 1) * np + j - 1] = work2[m - 1];
         }
     }
+}
+
+fn pow2<T: Float>(x: T) -> T {
+    x * x
+}
+
+fn pow3<T: Float>(x: T) -> T {
+    x * x * x
 }
