@@ -205,10 +205,11 @@ mod tests {
             5.0, 9.0, 2.0, 9.0, 0.0, 6.0, 3.0, 8.0, 5.0, 8.0, 7.0, 8.0, 8.0, 0.0, 2.0, 5.0, 0.0,
             5.0, 6.0, 7.0, 3.0, 6.0, 1.0, 4.0, 4.0, 4.0, 3.0, 7.0, 5.0, 8.0,
         ];
-        let mut seasonal = [0.0; 30];
-        let mut trend = [0.0; 30];
-        let mut weights = [0.0; 30];
-        let mut work = [0.0; (30 + 2 * 7) * 5];
+        // make non-zero to test correctness
+        let mut seasonal = [1.0; 30];
+        let mut trend = [2.0; 30];
+        let mut weights = [3.0; 30];
+        let mut work = [4.0; (30 + 2 * 7) * 5];
 
         Stl::fit(
             &series,
