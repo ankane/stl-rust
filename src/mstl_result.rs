@@ -26,7 +26,7 @@ impl<T: Float> MstlResult<T> {
     }
 
     /// Returns the seasonal strength.
-    pub fn seasonal_strength(&self) -> Vec<f32> {
+    pub fn seasonal_strength(&self) -> Vec<f64> {
         self.seasonal()
             .iter()
             .map(|s| strength(s, self.remainder()))
@@ -34,7 +34,7 @@ impl<T: Float> MstlResult<T> {
     }
 
     /// Returns the trend strength.
-    pub fn trend_strength(&self) -> f32 {
+    pub fn trend_strength(&self) -> f64 {
         strength(self.trend(), self.remainder())
     }
 

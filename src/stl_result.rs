@@ -9,21 +9,21 @@ pub struct StlResult<T: Float = f32> {
     pub(crate) weights: Vec<T>,
 }
 
-fn var<T: Float>(series: &[T]) -> f32 {
-    let mean = series.iter().map(|v| (*v).as_f32()).sum::<f32>() / series.len() as f32;
+fn var<T: Float>(series: &[T]) -> f64 {
+    let mean = series.iter().map(|v| (*v).as_f64()).sum::<f64>() / series.len() as f64;
     series
         .iter()
-        .map(|v| ((*v).as_f32() - mean).powf(2.0))
-        .sum::<f32>()
-        / (series.len() as f32 - 1.0)
+        .map(|v| ((*v).as_f64() - mean).powf(2.0))
+        .sum::<f64>()
+        / (series.len() as f64 - 1.0)
 }
 
-pub(crate) fn strength<T: Float>(component: &[T], remainder: &[T]) -> f32 {
+pub(crate) fn strength<T: Float>(component: &[T], remainder: &[T]) -> f64 {
     let sr = component
         .iter()
         .zip(remainder)
-        .map(|(a, b)| (*a).as_f32() + (*b).as_f32())
-        .collect::<Vec<f32>>();
+        .map(|(a, b)| *a + *b)
+        .collect::<Vec<T>>();
     (1.0 - var(remainder) / var(&sr)).max(0.0)
 }
 
@@ -49,12 +49,12 @@ impl<T: Float> StlResult<T> {
     }
 
     /// Returns the seasonal strength.
-    pub fn seasonal_strength(&self) -> f32 {
+    pub fn seasonal_strength(&self) -> f64 {
         strength(self.seasonal(), self.remainder())
     }
 
     /// Returns the trend strength.
-    pub fn trend_strength(&self) -> f32 {
+    pub fn trend_strength(&self) -> f64 {
         strength(self.trend(), self.remainder())
     }
 

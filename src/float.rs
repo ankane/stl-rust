@@ -21,7 +21,7 @@ pub trait Float:
     fn one() -> Self;
 
     fn abs(&self) -> Self;
-    fn as_f32(&self) -> f32;
+    fn as_f64(&self) -> f64;
     #[cfg(feature = "std")]
     fn ln(&self) -> Self;
     fn max(&self, x: Self) -> Self;
@@ -51,8 +51,8 @@ impl Float for f32 {
         f32::abs(*self)
     }
 
-    fn as_f32(&self) -> f32 {
-        *self
+    fn as_f64(&self) -> f64 {
+        *self as f64
     }
 
     #[cfg(feature = "std")]
@@ -101,8 +101,8 @@ impl Float for f64 {
         f64::abs(*self)
     }
 
-    fn as_f32(&self) -> f32 {
-        *self as f32
+    fn as_f64(&self) -> f64 {
+        *self
     }
 
     #[cfg(feature = "std")]
