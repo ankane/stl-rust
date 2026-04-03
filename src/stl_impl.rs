@@ -6,13 +6,13 @@
 
 #![allow(clippy::too_many_arguments)]
 
-#[cfg(not(feature = "std"))]
-use core::f32::math::sqrt;
-
 #[cfg(feature = "std")]
 fn sqrt(x: f32) -> f32 {
     x.sqrt()
 }
+
+#[cfg(not(feature = "std"))]
+use core::f32::math::sqrt;
 
 fn pow2(x: f32) -> f32 {
     x * x

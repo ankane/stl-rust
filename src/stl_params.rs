@@ -4,13 +4,13 @@ use super::Error;
 #[cfg(feature = "std")]
 use super::StlResult;
 
-#[cfg(not(feature = "std"))]
-use core::f32::math::ceil;
-
 #[cfg(feature = "std")]
 fn ceil(x: f32) -> f32 {
     x.ceil()
 }
+
+#[cfg(not(feature = "std"))]
+use core::f32::math::ceil;
 
 /// A set of STL parameters.
 #[derive(Clone, Debug)]
