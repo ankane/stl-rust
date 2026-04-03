@@ -19,6 +19,9 @@ impl Mstl {
 mod tests {
     use crate::{Error, Float, Mstl, Stl};
 
+    #[cfg(feature = "alloc")]
+    use alloc::{string::ToString, vec, vec::Vec};
+
     fn assert_in_delta<T: Float>(exp: T, act: T) {
         assert!((exp - act).abs() < T::from_f64(0.001));
     }
@@ -126,6 +129,7 @@ mod tests {
         );
     }
 
+    #[cfg_attr(not(feature = "std"), ignore)]
     #[test]
     fn test_lambda() {
         let result = Mstl::params()
@@ -150,6 +154,7 @@ mod tests {
         );
     }
 
+    #[cfg_attr(not(feature = "std"), ignore)]
     #[test]
     fn test_lambda_zero() {
         let series: Vec<f32> = generate_series().iter().map(|&v| v + 1.0).collect();

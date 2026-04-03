@@ -1,6 +1,9 @@
 use super::stl_result::strength;
 use super::Float;
 
+#[cfg(feature = "alloc")]
+use alloc::vec::Vec;
+
 /// A MSTL result.
 #[derive(Clone, Debug)]
 pub struct MstlResult<T: Float = f32> {

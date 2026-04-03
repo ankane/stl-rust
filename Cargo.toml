@@ -15,5 +15,6 @@ doctest = false
 [dependencies]
 
 [features]
+alloc = []
 default = ["std"]
-std = []
+std = ["alloc"]

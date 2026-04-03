@@ -4,6 +4,9 @@
 
 use super::{Error, Float, StlParams};
 
+#[cfg(feature = "alloc")]
+use alloc::vec::Vec;
+
 #[allow(clippy::too_many_arguments)]
 pub fn mstl<T: Float>(
     x: &[T],
@@ -73,6 +76,7 @@ pub fn mstl<T: Float>(
     Ok(())
 }
 
+#[cfg(feature = "std")]
 fn box_cox<T: Float>(y: &[T], lambda: T) -> Vec<T> {
     if lambda != T::zero() {
         y.iter()
@@ -81,4 +85,9 @@ fn box_cox<T: Float>(y: &[T], lambda: T) -> Vec<T> {
     } else {
         y.iter().map(|yi| (*yi).ln()).collect()
     }
+}
+
+#[cfg(not(feature = "std"))]
+fn box_cox<T: Float>(_y: &[T], _lambda: T) -> Vec<T> {
+    todo!()
 }

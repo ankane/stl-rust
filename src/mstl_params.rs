@@ -1,6 +1,9 @@
 use super::mstl_impl::mstl;
 use super::{Error, Float, MstlResult, StlParams};
 
+#[cfg(feature = "alloc")]
+use alloc::{vec, vec::Vec};
+
 /// A set of MSTL parameters.
 #[derive(Clone, Debug)]
 pub struct MstlParams {

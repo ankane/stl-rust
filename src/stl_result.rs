@@ -1,5 +1,8 @@
 use super::Float;
 
+#[cfg(feature = "alloc")]
+use alloc::vec::Vec;
+
 /// A STL result.
 #[derive(Clone, Debug)]
 pub struct StlResult<T: Float = f32> {
@@ -13,7 +16,10 @@ fn var<T: Float>(series: &[T]) -> f64 {
     let mean = series.iter().map(|v| (*v).as_f64()).sum::<f64>() / series.len() as f64;
     series
         .iter()
-        .map(|v| ((*v).as_f64() - mean).powf(2.0))
+        .map(|v| {
+            let diff = (*v).as_f64() - mean;
+            diff * diff
+        })
         .sum::<f64>()
         / (series.len() as f64 - 1.0)
 }
