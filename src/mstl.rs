@@ -1,3 +1,4 @@
+use super::float::Float;
 use super::{Error, MstlParams, MstlResult};
 
 /// Multiple seasonal-trend decomposition using Loess (MSTL).
@@ -5,7 +6,7 @@ pub struct Mstl;
 
 impl Mstl {
     /// Decomposes a time series.
-    pub fn fit(series: &[f32], periods: &[usize]) -> Result<MstlResult, Error> {
+    pub fn fit<T: Float>(series: &[T], periods: &[usize]) -> Result<MstlResult<T>, Error> {
         MstlParams::new().fit(series, periods)
     }
 
@@ -17,13 +18,14 @@ impl Mstl {
 
 #[cfg(test)]
 mod tests {
+    use crate::float::Float;
     use crate::{Error, Mstl, Stl};
 
-    fn assert_in_delta(exp: f32, act: f32) {
-        assert!((exp - act).abs() < 0.001);
+    fn assert_in_delta<T: Float>(exp: T, act: T) {
+        assert!((exp - act).abs() < T::from_f64(0.001));
     }
 
-    fn assert_elements_in_delta(exp: &[f32], act: &[f32]) {
+    fn assert_elements_in_delta<T: Float>(exp: &[T], act: &[T]) {
         assert_eq!(exp.len(), act.len());
         for i in 0..exp.len() {
             assert_in_delta(exp[i], act[i]);
@@ -38,8 +40,33 @@ mod tests {
     }
 
     #[test]
-    fn test_works() {
+    fn test_f32() {
         let result = Mstl::fit(&generate_series(), &[6, 10]).unwrap();
+        assert_elements_in_delta(
+            &[0.28318232, 0.70529824, -1.980384, 2.1643379, -2.3356874],
+            &result.seasonal()[0][..5],
+        );
+        assert_elements_in_delta(
+            &[1.4130436, 1.6048906, 0.050958008, -1.8706754, -1.7704514],
+            &result.seasonal()[1][..5],
+        );
+        assert_elements_in_delta(
+            &[5.139485, 5.223691, 5.3078976, 5.387292, 5.4666862],
+            &result.trend()[..5],
+        );
+        assert_elements_in_delta(
+            &[-1.835711, 1.4661198, -1.3784716, 3.319045, -1.3605475],
+            &result.remainder()[..5],
+        );
+    }
+
+    #[test]
+    fn test_f64() {
+        let series: Vec<f64> = vec![
+            5.0, 9.0, 2.0, 9.0, 0.0, 6.0, 3.0, 8.0, 5.0, 8.0, 7.0, 8.0, 8.0, 0.0, 2.0, 5.0, 0.0,
+            5.0, 6.0, 7.0, 3.0, 6.0, 1.0, 4.0, 4.0, 4.0, 3.0, 7.0, 5.0, 8.0,
+        ];
+        let result = Mstl::fit(&series, &[6, 10]).unwrap();
         assert_elements_in_delta(
             &[0.28318232, 0.70529824, -1.980384, 2.1643379, -2.3356874],
             &result.seasonal()[0][..5],

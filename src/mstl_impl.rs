@@ -2,21 +2,22 @@
 // MSTL: A Seasonal-Trend Decomposition Algorithm for Time Series with Multiple Seasonal Patterns.
 // arXiv:2107.13462 [stat.AP]. https://doi.org/10.48550/arXiv.2107.13462
 
+use super::float::Float;
 use super::{Error, StlParams};
 
 #[allow(clippy::too_many_arguments)]
-pub fn mstl(
-    x: &[f32],
+pub fn mstl<T: Float>(
+    x: &[T],
     seas_ids: &[usize],
     iterate: usize,
     lambda: Option<f32>,
     swin: &Option<Vec<usize>>,
     stl_params: &StlParams,
-    seasonality: &mut [Vec<f32>],
-    trend: &mut [f32],
-    remainder: &mut [f32],
-    weights: &mut [f32],
-    work: &mut [f32],
+    seasonality: &mut [Vec<T>],
+    trend: &mut [T],
+    remainder: &mut [T],
+    weights: &mut [T],
+    work: &mut [T],
 ) -> Result<(), Error> {
     let k = x.len();
 
@@ -31,7 +32,7 @@ pub fn mstl(
     }
 
     let mut deseas = if let Some(lam) = lambda {
-        box_cox(x, lam)
+        box_cox(x, T::from_f64(lam as f64))
     } else {
         x.to_vec()
     };
@@ -40,7 +41,7 @@ pub fn mstl(
         for (i, &idx) in indices.iter().enumerate() {
             if j > 0 {
                 for (d, s) in deseas.iter_mut().zip(&seasonality[idx]) {
-                    *d += s;
+                    *d += *s;
                 }
             }
 
@@ -61,7 +62,7 @@ pub fn mstl(
             )?;
 
             for (d, s) in deseas.iter_mut().zip(&seasonality[idx]) {
-                *d -= s;
+                *d -= *s;
             }
         }
     }
@@ -73,12 +74,12 @@ pub fn mstl(
     Ok(())
 }
 
-fn box_cox(y: &[f32], lambda: f32) -> Vec<f32> {
-    if lambda != 0.0 {
+fn box_cox<T: Float>(y: &[T], lambda: T) -> Vec<T> {
+    if lambda != T::zero() {
         y.iter()
-            .map(|yi| (yi.powf(lambda) - 1.0) / lambda)
+            .map(|yi| ((*yi).powf(lambda) - T::one()) / lambda)
             .collect()
     } else {
-        y.iter().map(|yi| yi.ln()).collect()
+        y.iter().map(|yi| (*yi).ln()).collect()
     }
 }

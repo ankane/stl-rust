@@ -1,3 +1,4 @@
+use super::float::Float;
 use super::stl_impl::stl;
 use super::Error;
 
@@ -122,7 +123,7 @@ impl StlParams {
 
     /// Decomposes a time series.
     #[cfg(feature = "std")]
-    pub fn fit(&self, series: &[f32], period: usize) -> Result<StlResult, Error> {
+    pub fn fit<T: Float>(&self, series: &[T], period: usize) -> Result<StlResult<T>, Error> {
         let n = series.len();
         let np = period;
 
@@ -132,10 +133,10 @@ impl StlParams {
         }
         let np = np.max(2);
 
-        let mut seasonal = vec![0.0; n];
-        let mut trend = vec![0.0; n];
-        let mut weights = vec![0.0; n];
-        let mut work = vec![0.0; (n + 2 * np) * 5];
+        let mut seasonal = vec![T::zero(); n];
+        let mut trend = vec![T::zero(); n];
+        let mut weights = vec![T::zero(); n];
+        let mut work = vec![T::zero(); (n + 2 * np) * 5];
 
         self.fit_impl(
             series,
@@ -161,14 +162,14 @@ impl StlParams {
 
     /// Decomposes a time series.
     #[cfg(not(feature = "std"))]
-    pub fn fit(
+    pub fn fit<T: Float>(
         &self,
-        series: &[f32],
+        series: &[T],
         period: usize,
-        seasonal: &mut [f32],
-        trend: &mut [f32],
-        weights: &mut [f32],
-        work: &mut [f32],
+        seasonal: &mut [T],
+        trend: &mut [T],
+        weights: &mut [T],
+        work: &mut [T],
     ) -> Result<(), Error> {
         let n = series.len();
         let np = period;
@@ -186,14 +187,14 @@ impl StlParams {
         self.fit_impl(series, period, seasonal, trend, weights, work)
     }
 
-    pub(crate) fn fit_impl(
+    pub(crate) fn fit_impl<T: Float>(
         &self,
-        series: &[f32],
+        series: &[T],
         period: usize,
-        seasonal: &mut [f32],
-        trend: &mut [f32],
-        weights: &mut [f32],
-        work: &mut [f32],
+        seasonal: &mut [T],
+        trend: &mut [T],
+        weights: &mut [T],
+        work: &mut [T],
     ) -> Result<(), Error> {
         if period < 2 {
             return Err(Error::Period);
@@ -249,7 +250,7 @@ impl StlParams {
         debug_assert!(nl % 2 == 1);
         debug_assert!(nl >= 3);
 
-        trend.fill(0.0);
+        trend.fill(T::zero());
 
         stl(
             series, newnp, newns, nt, nl, isdeg, itdeg, ildeg, nsjump, ntjump, nljump, ni, no,

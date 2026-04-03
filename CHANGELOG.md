@@ -1,5 +1,6 @@
 ## 0.4.0 (unreleased)
 
+- Added support for `f64`
 - Added `std` feature
 
 ## 0.3.1 (2024-07-10)

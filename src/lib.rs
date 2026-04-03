@@ -3,6 +3,7 @@
 #![cfg_attr(not(feature = "std"), feature(core_float_math))]
 
 mod error;
+mod float;
 mod stl;
 mod stl_impl;
 mod stl_params;

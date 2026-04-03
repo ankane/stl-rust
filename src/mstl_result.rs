@@ -1,26 +1,27 @@
+use super::float::Float;
 use super::stl_result::strength;
 
 /// A MSTL result.
 #[derive(Clone, Debug)]
-pub struct MstlResult {
-    pub(crate) seasonal: Vec<Vec<f32>>,
-    pub(crate) trend: Vec<f32>,
-    pub(crate) remainder: Vec<f32>,
+pub struct MstlResult<T: Float = f32> {
+    pub(crate) seasonal: Vec<Vec<T>>,
+    pub(crate) trend: Vec<T>,
+    pub(crate) remainder: Vec<T>,
 }
 
-impl MstlResult {
+impl<T: Float> MstlResult<T> {
     /// Returns the seasonal components.
-    pub fn seasonal(&self) -> &[Vec<f32>] {
+    pub fn seasonal(&self) -> &[Vec<T>] {
         &self.seasonal[..]
     }
 
     /// Returns the trend component.
-    pub fn trend(&self) -> &[f32] {
+    pub fn trend(&self) -> &[T] {
         &self.trend
     }
 
     /// Returns the remainder.
-    pub fn remainder(&self) -> &[f32] {
+    pub fn remainder(&self) -> &[T] {
         &self.remainder
     }
 
@@ -38,7 +39,7 @@ impl MstlResult {
     }
 
     /// Consumes the result, returning the seasonal components, trend component, and remainder.
-    pub fn into_parts(self) -> (Vec<Vec<f32>>, Vec<f32>, Vec<f32>) {
+    pub fn into_parts(self) -> (Vec<Vec<T>>, Vec<T>, Vec<T>) {
         (self.seasonal, self.trend, self.remainder)
     }
 }

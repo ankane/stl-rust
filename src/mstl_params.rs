@@ -1,3 +1,4 @@
+use super::float::Float;
 use super::mstl_impl::mstl;
 use super::{Error, MstlResult, StlParams};
 
@@ -46,7 +47,7 @@ impl MstlParams {
     }
 
     /// Decomposes a time series.
-    pub fn fit(&self, series: &[f32], periods: &[usize]) -> Result<MstlResult, Error> {
+    pub fn fit<T: Float>(&self, series: &[T], periods: &[usize]) -> Result<MstlResult<T>, Error> {
         if periods.is_empty() {
             // TODO use Friedman's Super Smoother for trend
             return Err(Error::EmptyPeriods);
@@ -77,12 +78,12 @@ impl MstlParams {
         let n = series.len();
         let mut seasonal = Vec::with_capacity(periods.len());
         for _ in 0..periods.len() {
-            seasonal.push(vec![0.0; n]);
+            seasonal.push(vec![T::zero(); n]);
         }
-        let mut trend = vec![0.0; n];
-        let mut remainder = vec![0.0; n];
-        let mut weights = vec![0.0; n];
-        let mut work = vec![0.0; (n + 2 * periods.iter().max().unwrap()) * 5];
+        let mut trend = vec![T::zero(); n];
+        let mut remainder = vec![T::zero(); n];
+        let mut weights = vec![T::zero(); n];
+        let mut work = vec![T::zero(); (n + 2 * periods.iter().max().unwrap()) * 5];
 
         mstl(
             series,
