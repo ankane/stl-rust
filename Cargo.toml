@@ -15,4 +15,5 @@ doctest = false
 [dependencies]
 
 [features]
-no_std = []
+default = ["std"]
+std = []

@@ -1,6 +1,6 @@
 use super::{Error, StlParams};
 
-#[cfg(not(feature = "no_std"))]
+#[cfg(feature = "std")]
 use super::StlResult;
 
 /// Seasonal-trend decomposition using Loess (STL).
@@ -8,13 +8,13 @@ pub struct Stl;
 
 impl Stl {
     /// Decomposes a time series.
-    #[cfg(not(feature = "no_std"))]
+    #[cfg(feature = "std")]
     pub fn fit(series: &[f32], period: usize) -> Result<StlResult, Error> {
         StlParams::new().fit(series, period)
     }
 
     /// Decomposes a time series.
-    #[cfg(feature = "no_std")]
+    #[cfg(not(feature = "std"))]
     pub fn fit(
         series: &[f32],
         period: usize,
@@ -33,7 +33,7 @@ impl Stl {
 }
 
 #[cfg(test)]
-#[cfg(not(feature = "no_std"))]
+#[cfg(feature = "std")]
 mod tests {
     use crate::{Error, Stl};
 
@@ -184,7 +184,7 @@ mod tests {
 }
 
 #[cfg(test)]
-#[cfg(feature = "no_std")]
+#[cfg(not(feature = "std"))]
 mod tests {
     use crate::Stl;
 

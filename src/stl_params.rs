@@ -1,15 +1,15 @@
 use super::stl_impl::stl;
 use super::Error;
 
-#[cfg(not(feature = "no_std"))]
+#[cfg(feature = "std")]
 use super::StlResult;
 
-#[cfg(feature = "no_std")]
+#[cfg(not(feature = "std"))]
 fn ceilf(x: f32) -> f32 {
     core::f32::math::ceil(x)
 }
 
-#[cfg(not(feature = "no_std"))]
+#[cfg(feature = "std")]
 fn ceilf(x: f32) -> f32 {
     x.ceil()
 }
@@ -123,7 +123,7 @@ impl StlParams {
     }
 
     /// Decomposes a time series.
-    #[cfg(not(feature = "no_std"))]
+    #[cfg(feature = "std")]
     pub fn fit(&self, series: &[f32], period: usize) -> Result<StlResult, Error> {
         let n = series.len();
         let np = period;
@@ -162,7 +162,7 @@ impl StlParams {
     }
 
     /// Decomposes a time series.
-    #[cfg(feature = "no_std")]
+    #[cfg(not(feature = "std"))]
     pub fn fit(
         &self,
         series: &[f32],
