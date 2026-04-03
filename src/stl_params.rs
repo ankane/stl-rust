@@ -215,8 +215,9 @@ impl StlParams {
         }
 
         let newnp = np;
-        let mut nt = ceil((1.5 * newnp as f32) / (1.0 - 1.5 / newns as f32)) as usize;
-        nt = self.nt.unwrap_or(nt);
+        let mut nt = self
+            .nt
+            .unwrap_or_else(|| ceil((1.5 * newnp as f32) / (1.0 - 1.5 / newns as f32)) as usize);
         nt = nt.max(3);
         if nt % 2 == 0 {
             nt += 1;
@@ -227,12 +228,18 @@ impl StlParams {
             nl += 1;
         }
 
-        let ni = self.ni.unwrap_or(if self.robust { 1 } else { 2 });
-        let no = self.no.unwrap_or(if self.robust { 15 } else { 0 });
+        let ni = self.ni.unwrap_or_else(|| if self.robust { 1 } else { 2 });
+        let no = self.no.unwrap_or_else(|| if self.robust { 15 } else { 0 });
 
-        let nsjump = self.nsjump.unwrap_or(ceil((newns as f32) / 10.0) as usize);
-        let ntjump = self.ntjump.unwrap_or(ceil((nt as f32) / 10.0) as usize);
-        let nljump = self.nljump.unwrap_or(ceil((nl as f32) / 10.0) as usize);
+        let nsjump = self
+            .nsjump
+            .unwrap_or_else(|| ceil((newns as f32) / 10.0) as usize);
+        let ntjump = self
+            .ntjump
+            .unwrap_or_else(|| ceil((nt as f32) / 10.0) as usize);
+        let nljump = self
+            .nljump
+            .unwrap_or_else(|| ceil((nl as f32) / 10.0) as usize);
 
         if isdeg != 0 && isdeg != 1 {
             return Err(Error::SeasonalDegree);
