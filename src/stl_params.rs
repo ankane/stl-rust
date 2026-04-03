@@ -208,6 +208,16 @@ impl StlParams {
         let itdeg = self.itdeg;
         let ildeg = self.ildeg.unwrap_or(itdeg);
 
+        if isdeg != 0 && isdeg != 1 {
+            return Err(Error::SeasonalDegree);
+        }
+        if itdeg != 0 && itdeg != 1 {
+            return Err(Error::TrendDegree);
+        }
+        if ildeg != 0 && ildeg != 1 {
+            return Err(Error::LowPassDegree);
+        }
+
         let mut newns = self.ns.unwrap_or(newnp).max(3);
         if newns % 2 == 0 {
             newns += 1;
@@ -238,16 +248,6 @@ impl StlParams {
         let nljump = self
             .nljump
             .unwrap_or_else(|| ceil((nl as f32) / 10.0) as usize);
-
-        if isdeg != 0 && isdeg != 1 {
-            return Err(Error::SeasonalDegree);
-        }
-        if itdeg != 0 && itdeg != 1 {
-            return Err(Error::TrendDegree);
-        }
-        if ildeg != 0 && ildeg != 1 {
-            return Err(Error::LowPassDegree);
-        }
 
         debug_assert!(newnp >= 2);
         debug_assert!(newns % 2 == 1);
