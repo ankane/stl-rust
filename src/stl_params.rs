@@ -224,6 +224,7 @@ impl StlParams {
         }
 
         let mut nl = self.nl.unwrap_or(newnp);
+        nl = nl.max(3);
         if nl % 2 == 0 && self.nl.is_none() {
             nl += 1;
         }
