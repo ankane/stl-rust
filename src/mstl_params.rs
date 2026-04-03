@@ -1,6 +1,7 @@
+use alloc::{vec, vec::Vec};
+
 use super::mstl_impl::mstl;
 use super::{Error, Float, MstlResult, StlParams};
-use alloc::{vec, vec::Vec};
 
 /// A set of MSTL parameters.
 #[derive(Clone, Debug)]

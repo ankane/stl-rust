@@ -1,5 +1,6 @@
-use super::Float;
 use alloc::vec::Vec;
+
+use super::Float;
 
 /// A STL result.
 #[derive(Clone, Debug)]

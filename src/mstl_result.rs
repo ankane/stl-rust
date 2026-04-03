@@ -1,6 +1,7 @@
+use alloc::vec::Vec;
+
 use super::stl_result::strength;
 use super::Float;
-use alloc::vec::Vec;
 
 /// A MSTL result.
 #[derive(Clone, Debug)]
