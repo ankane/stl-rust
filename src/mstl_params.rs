@@ -81,6 +81,7 @@ impl MstlParams {
         }
         let mut trend = vec![0.0; n];
         let mut remainder = vec![0.0; n];
+        let mut weights = vec![0.0; n];
 
         mstl(
             series,
@@ -92,6 +93,7 @@ impl MstlParams {
             &mut seasonal,
             &mut trend,
             &mut remainder,
+            &mut weights,
         )?;
 
         Ok(MstlResult {

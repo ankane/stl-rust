@@ -15,6 +15,7 @@ pub fn mstl(
     seasonality: &mut [Vec<f32>],
     trend: &mut [f32],
     remainder: &mut [f32],
+    weights: &mut [f32],
 ) -> Result<(), Error> {
     let k = x.len();
 
@@ -49,7 +50,6 @@ pub fn mstl(
                 params.seasonal_length(7 + 4 * (i + 1));
             }
 
-            let mut weights = vec![0.0; k];
             let mut work = vec![0.0; (k + 2 * seas_ids[idx]) * 5];
 
             params.fit_impl(
@@ -57,7 +57,7 @@ pub fn mstl(
                 seas_ids[idx],
                 &mut seasonality[idx],
                 trend,
-                &mut weights,
+                weights,
                 &mut work,
             )?;
 
