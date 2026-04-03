@@ -13,9 +13,9 @@ impl Stl {
         StlParams::new().fit(series, period)
     }
 
-    /// Decomposes a time series.
+    /// Decomposes a time series with zero allocations.
     #[cfg(not(feature = "alloc"))]
-    pub fn fit<T: Float>(
+    pub fn fit_zero<T: Float>(
         series: &[T],
         period: usize,
         seasonal: &mut [T],
@@ -23,7 +23,7 @@ impl Stl {
         weights: &mut [T],
         work: &mut [T],
     ) -> Result<(), Error> {
-        StlParams::new().fit(series, period, seasonal, trend, weights, work)
+        StlParams::new().fit_zero(series, period, seasonal, trend, weights, work)
     }
 
     /// Creates a new set of parameters.
@@ -36,7 +36,7 @@ impl Stl {
 #[cfg(feature = "alloc")]
 mod tests {
     use crate::{Error, Float, Stl};
-    use alloc::{vec, vec::Vec, string::ToString};
+    use alloc::{string::ToString, vec, vec::Vec};
 
     fn assert_in_delta<T: Float>(exp: T, act: T) {
         assert!((exp - act).abs() < T::from_f64(0.001));
@@ -234,7 +234,7 @@ mod tests {
         let mut weights = [3.0; 30];
         let mut work = [4.0; (30 + 2 * 7) * 5];
 
-        Stl::fit(
+        Stl::fit_zero(
             &series,
             7,
             &mut seasonal,
@@ -269,7 +269,7 @@ mod tests {
 
         Stl::params()
             .robust(true)
-            .fit(
+            .fit_zero(
                 &series,
                 7,
                 &mut seasonal,

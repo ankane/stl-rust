@@ -162,9 +162,9 @@ impl StlParams {
         })
     }
 
-    /// Decomposes a time series.
+    /// Decomposes a time series with zero allocations.
     #[cfg(not(feature = "alloc"))]
-    pub fn fit<T: Float>(
+    pub fn fit_zero<T: Float>(
         &self,
         series: &[T],
         period: usize,
