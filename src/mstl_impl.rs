@@ -16,6 +16,7 @@ pub fn mstl(
     trend: &mut [f32],
     remainder: &mut [f32],
     weights: &mut [f32],
+    work: &mut [f32],
 ) -> Result<(), Error> {
     let k = x.len();
 
@@ -50,15 +51,13 @@ pub fn mstl(
                 params.seasonal_length(7 + 4 * (i + 1));
             }
 
-            let mut work = vec![0.0; (k + 2 * seas_ids[idx]) * 5];
-
             params.fit_impl(
                 &deseas,
                 seas_ids[idx],
                 &mut seasonality[idx],
                 trend,
                 weights,
-                &mut work,
+                work,
             )?;
 
             for (d, s) in deseas.iter_mut().zip(&seasonality[idx]) {

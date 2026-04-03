@@ -82,6 +82,7 @@ impl MstlParams {
         let mut trend = vec![0.0; n];
         let mut remainder = vec![0.0; n];
         let mut weights = vec![0.0; n];
+        let mut work = vec![0.0; (n + 2 * periods.iter().max().unwrap()) * 5];
 
         mstl(
             series,
@@ -94,6 +95,7 @@ impl MstlParams {
             &mut trend,
             &mut remainder,
             &mut weights,
+            &mut work,
         )?;
 
         Ok(MstlResult {
