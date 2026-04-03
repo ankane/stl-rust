@@ -4,7 +4,6 @@
 
 use super::{Error, Float, StlParams};
 
-#[cfg(feature = "alloc")]
 use alloc::vec::Vec;
 
 #[allow(clippy::too_many_arguments)]

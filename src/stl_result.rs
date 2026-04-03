@@ -1,6 +1,4 @@
 use super::Float;
-
-#[cfg(feature = "alloc")]
 use alloc::vec::Vec;
 
 /// A STL result.

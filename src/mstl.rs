@@ -17,12 +17,9 @@ impl Mstl {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Error, Mstl, Stl};
-
-    #[cfg(feature = "alloc")]
-    use alloc::{string::ToString, vec, vec::Vec};
-
     use crate::stl::test_helpers::*;
+    use crate::{Error, Mstl, Stl};
+    use alloc::{string::ToString, vec, vec::Vec};
 
     fn generate_series() -> Vec<f32> {
         return vec![
