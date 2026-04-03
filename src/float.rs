@@ -10,7 +10,6 @@ pub trait Float:
     + Mul<Output = Self>
     + MulAssign
     + PartialOrd
-    + Sized
     + Sub<Output = Self>
     + SubAssign
     + Sum
