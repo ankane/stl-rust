@@ -117,6 +117,14 @@ mod tests {
     }
 
     #[test]
+    fn test_period_one() {
+        let result = Stl::fit(&generate_series(), 1);
+        let err = result.unwrap_err();
+        assert_eq!(err, Error::Period);
+        assert_eq!(err.to_string(), "period must be at least 2");
+    }
+
+    #[test]
     fn test_too_few_periods() {
         let result = Stl::params().fit(&generate_series(), 16);
         let err = result.unwrap_err();

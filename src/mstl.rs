@@ -174,8 +174,8 @@ mod tests {
     fn test_period_one() {
         let result = Mstl::fit(&generate_series(), &[1]);
         let err = result.unwrap_err();
-        assert_eq!(err, Error::Periods);
-        assert_eq!(err.to_string(), "periods must be at least 2");
+        assert_eq!(err, Error::Period);
+        assert_eq!(err.to_string(), "period must be at least 2");
     }
 
     #[test]

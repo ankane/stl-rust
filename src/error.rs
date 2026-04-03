@@ -9,7 +9,7 @@ pub enum Error {
     SeasonalDegree,
     TrendDegree,
     LowPassDegree,
-    Periods,
+    Period,
     Lambda,
     SeasonalLengths,
     EmptyPeriods,
@@ -24,7 +24,7 @@ impl fmt::Display for Error {
             Error::SeasonalDegree => write!(f, "seasonal_degree must be 0 or 1"),
             Error::TrendDegree => write!(f, "trend_degree must be 0 or 1"),
             Error::LowPassDegree => write!(f, "low_pass_degree must be 0 or 1"),
-            Error::Periods => write!(f, "periods must be at least 2"),
+            Error::Period => write!(f, "period must be at least 2"),
             Error::Lambda => write!(f, "lambda must be between 0 and 1"),
             Error::SeasonalLengths => {
                 write!(f, "seasonal_lengths must have the same length as periods")

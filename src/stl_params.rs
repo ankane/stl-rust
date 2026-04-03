@@ -195,6 +195,10 @@ impl StlParams {
         weights: &mut [f32],
         work: &mut [f32],
     ) -> Result<(), Error> {
+        if period < 2 {
+            return Err(Error::Period);
+        }
+
         let np = period;
         let ns = self.ns.unwrap_or(np);
 
@@ -207,7 +211,7 @@ impl StlParams {
             newns += 1;
         }
 
-        let newnp = np.max(2);
+        let newnp = np;
         let mut nt = ceilf((1.5 * newnp as f32) / (1.0 - 1.5 / newns as f32)) as usize;
         nt = self.nt.unwrap_or(nt);
         nt = nt.max(3);

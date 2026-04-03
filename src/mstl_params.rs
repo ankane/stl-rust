@@ -48,7 +48,7 @@ impl MstlParams {
     /// Decomposes a time series.
     pub fn fit(&self, series: &[f32], periods: &[usize]) -> Result<MstlResult, Error> {
         if periods.iter().any(|&v| v < 2) {
-            return Err(Error::Periods);
+            return Err(Error::Period);
         }
 
         for np in periods {
