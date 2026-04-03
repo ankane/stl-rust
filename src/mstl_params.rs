@@ -47,6 +47,11 @@ impl MstlParams {
 
     /// Decomposes a time series.
     pub fn fit(&self, series: &[f32], periods: &[usize]) -> Result<MstlResult, Error> {
+        if periods.is_empty() {
+            // TODO use Friedman's Super Smoother for trend
+            return Err(Error::EmptyPeriods);
+        }
+
         if periods.iter().any(|&v| v < 2) {
             return Err(Error::Period);
         }

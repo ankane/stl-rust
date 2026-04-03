@@ -35,46 +35,41 @@ pub fn mstl(
         x.to_vec()
     };
 
-    if !seas_ids.is_empty() {
-        for _ in 0..seas_ids.len() {
-            seasonality.push(vec![0.0; k]);
-        }
+    for _ in 0..seas_ids.len() {
+        seasonality.push(vec![0.0; k]);
+    }
 
-        for j in 0..iterate {
-            for (i, &idx) in indices.iter().enumerate() {
-                if j > 0 {
-                    for (d, s) in deseas.iter_mut().zip(&seasonality[idx]) {
-                        *d += s;
-                    }
-                }
-
-                let mut params = stl_params.clone();
-                if let Some(sw) = &swin {
-                    params.seasonal_length(sw[idx]);
-                } else if stl_params.ns.is_none() {
-                    params.seasonal_length(7 + 4 * (i + 1));
-                }
-
-                let mut weights = vec![0.0; k];
-                let mut work = vec![0.0; (k + 2 * seas_ids[idx]) * 5];
-
-                params.fit_impl(
-                    &deseas,
-                    seas_ids[idx],
-                    &mut seasonality[idx],
-                    trend,
-                    &mut weights,
-                    &mut work,
-                )?;
-
+    for j in 0..iterate {
+        for (i, &idx) in indices.iter().enumerate() {
+            if j > 0 {
                 for (d, s) in deseas.iter_mut().zip(&seasonality[idx]) {
-                    *d -= s;
+                    *d += s;
                 }
             }
+
+            let mut params = stl_params.clone();
+            if let Some(sw) = &swin {
+                params.seasonal_length(sw[idx]);
+            } else if stl_params.ns.is_none() {
+                params.seasonal_length(7 + 4 * (i + 1));
+            }
+
+            let mut weights = vec![0.0; k];
+            let mut work = vec![0.0; (k + 2 * seas_ids[idx]) * 5];
+
+            params.fit_impl(
+                &deseas,
+                seas_ids[idx],
+                &mut seasonality[idx],
+                trend,
+                &mut weights,
+                &mut work,
+            )?;
+
+            for (d, s) in deseas.iter_mut().zip(&seasonality[idx]) {
+                *d -= s;
+            }
         }
-    } else {
-        // TODO use Friedman's Super Smoother for trend
-        return Err(Error::EmptyPeriods);
     }
 
     for i in 0..k {
