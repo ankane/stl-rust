@@ -203,13 +203,12 @@ impl StlParams {
         }
 
         let np = period;
-        let ns = self.ns.unwrap_or(np);
 
         let isdeg = self.isdeg;
         let itdeg = self.itdeg;
         let ildeg = self.ildeg.unwrap_or(itdeg);
 
-        let mut newns = ns.max(3);
+        let mut newns = self.ns.unwrap_or(np).max(3);
         if newns % 2 == 0 {
             newns += 1;
         }
@@ -217,14 +216,13 @@ impl StlParams {
         let newnp = np;
         let mut nt = self
             .nt
-            .unwrap_or_else(|| ceil((1.5 * newnp as f32) / (1.0 - 1.5 / newns as f32)) as usize);
-        nt = nt.max(3);
+            .unwrap_or_else(|| ceil((1.5 * newnp as f32) / (1.0 - 1.5 / newns as f32)) as usize)
+            .max(3);
         if nt % 2 == 0 {
             nt += 1;
         }
 
-        let mut nl = self.nl.unwrap_or(newnp);
-        nl = nl.max(3);
+        let mut nl = self.nl.unwrap_or(newnp).max(3);
         if nl % 2 == 0 && self.nl.is_none() {
             nl += 1;
         }
