@@ -18,8 +18,8 @@ pub trait Float:
 {
     fn from_f64(x: f64) -> Self;
     fn from_usize(x: usize) -> Self;
-    fn zero() -> Self;
     fn one() -> Self;
+    fn zero() -> Self;
 
     fn abs(&self) -> Self;
     fn as_f64(&self) -> f64;
