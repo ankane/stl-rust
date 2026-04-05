@@ -5,6 +5,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - run: cargo build
       - run: cargo test
+      - run: cargo +nightly build --no-default-features
       - run: cargo +nightly test --no-default-features
+      - run: cargo +nightly build --no-default-features --features alloc
       - run: cargo +nightly test --no-default-features --features alloc
