@@ -50,7 +50,7 @@ let fit = Stl::params().robust(true).fit(&series, period).unwrap();
 Get robustness weights
 
 ```rust
-fit.weights();
+let weights = fit.weights();
 ```
 
 ## Multiple Seasonality
