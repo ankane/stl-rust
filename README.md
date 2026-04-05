@@ -34,9 +34,9 @@ let fit = Stl::fit(&series, period).unwrap();
 Get the components
 
 ```rust
-fit.seasonal();
-fit.trend();
-fit.remainder();
+let seasonal = fit.seasonal();
+let trend = fit.trend();
+let remainder = fit.remainder();
 ```
 
 ## Robustness
@@ -100,13 +100,13 @@ let fit = Mstl::params()
 Get the seasonal strength
 
 ```rust
-fit.seasonal_strength();
+let strength = fit.seasonal_strength();
 ```
 
 Get the trend strength
 
 ```rust
-fit.trend_strength();
+let strength = fit.trend_strength();
 ```
 
 ## Credits
