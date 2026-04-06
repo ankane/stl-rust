@@ -236,8 +236,8 @@ impl StlParams {
             nl += 1;
         }
 
-        let ni = self.ni.unwrap_or_else(|| if self.robust { 1 } else { 2 });
-        let no = self.no.unwrap_or_else(|| if self.robust { 15 } else { 0 });
+        let ni = self.ni.unwrap_or(if self.robust { 1 } else { 2 });
+        let no = self.no.unwrap_or(if self.robust { 15 } else { 0 });
 
         let nsjump = self
             .nsjump
