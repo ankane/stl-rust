@@ -51,28 +51,30 @@ impl MstlParams {
     pub fn fit<T: Float>(&self, series: &[T], periods: &[usize]) -> Result<MstlResult<T>, Error> {
         if periods.is_empty() {
             // TODO use Friedman's Super Smoother for trend
-            return Err(Error::EmptyPeriods);
+            return Err(Error::Parameter("periods must not be empty"));
         }
 
         if periods.iter().any(|&v| v < 2) {
-            return Err(Error::Period);
+            return Err(Error::Parameter("period must be at least 2"));
         }
 
         for np in periods {
             if series.len() / 2 < *np {
-                return Err(Error::Series);
+                return Err(Error::Series("series has less than two periods"));
             }
         }
 
         if let Some(lambda) = self.lambda {
             if !(0.0..=1.0).contains(&lambda) {
-                return Err(Error::Lambda);
+                return Err(Error::Parameter("lambda must be between 0 and 1"));
             }
         }
 
         if let Some(swin) = &self.swin {
             if swin.len() != periods.len() {
-                return Err(Error::SeasonalLengths);
+                return Err(Error::Parameter(
+                    "seasonal_lengths must have the same length as periods",
+                ));
             }
         }
 

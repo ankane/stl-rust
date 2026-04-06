@@ -19,7 +19,7 @@ impl Mstl {
 mod tests {
     use crate::stl::test_helpers::*;
     use crate::{Error, Mstl, Stl};
-    use alloc::{string::ToString, vec, vec::Vec};
+    use alloc::{vec, vec::Vec};
 
     fn generate_series() -> Vec<f32> {
         return vec![
@@ -174,34 +174,38 @@ mod tests {
     #[test]
     fn test_lambda_out_of_range() {
         let result = Mstl::params().lambda(2.0).fit(&generate_series(), &[6, 10]);
-        let err = result.unwrap_err();
-        assert_eq!(err, Error::Lambda);
-        assert_eq!(err.to_string(), "lambda must be between 0 and 1");
+        assert_eq!(
+            result.unwrap_err(),
+            Error::Parameter("lambda must be between 0 and 1")
+        );
     }
 
     #[test]
     fn test_empty_periods() {
         let periods: Vec<usize> = Vec::new();
         let result = Mstl::fit(&generate_series(), &periods);
-        let err = result.unwrap_err();
-        assert_eq!(err, Error::EmptyPeriods);
-        assert_eq!(err.to_string(), "periods must not be empty");
+        assert_eq!(
+            result.unwrap_err(),
+            Error::Parameter("periods must not be empty")
+        );
     }
 
     #[test]
     fn test_period_one() {
         let result = Mstl::fit(&generate_series(), &[1]);
-        let err = result.unwrap_err();
-        assert_eq!(err, Error::Period);
-        assert_eq!(err.to_string(), "period must be at least 2");
+        assert_eq!(
+            result.unwrap_err(),
+            Error::Parameter("period must be at least 2")
+        );
     }
 
     #[test]
     fn test_too_few_periods() {
         let result = Mstl::fit(&generate_series(), &[16]);
-        let err = result.unwrap_err();
-        assert_eq!(err, Error::Series);
-        assert_eq!(err.to_string(), "series has less than two periods");
+        assert_eq!(
+            result.unwrap_err(),
+            Error::Series("series has less than two periods")
+        );
     }
 
     #[test]

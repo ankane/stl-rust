@@ -53,7 +53,7 @@ pub(crate) mod test_helpers {
 mod tests {
     use crate::stl::test_helpers::*;
     use crate::{Error, Stl};
-    use alloc::{string::ToString, vec, vec::Vec};
+    use alloc::{vec, vec::Vec};
 
     fn generate_series() -> Vec<f32> {
         return vec![
@@ -148,41 +148,46 @@ mod tests {
     #[test]
     fn test_period_one() {
         let result = Stl::fit(&generate_series(), 1);
-        let err = result.unwrap_err();
-        assert_eq!(err, Error::Period);
-        assert_eq!(err.to_string(), "period must be at least 2");
+        assert_eq!(
+            result.unwrap_err(),
+            Error::Parameter("period must be at least 2")
+        );
     }
 
     #[test]
     fn test_too_few_periods() {
         let result = Stl::params().fit(&generate_series(), 16);
-        let err = result.unwrap_err();
-        assert_eq!(err, Error::Series);
-        assert_eq!(err.to_string(), "series has less than two periods");
+        assert_eq!(
+            result.unwrap_err(),
+            Error::Series("series has less than two periods")
+        );
     }
 
     #[test]
     fn test_bad_seasonal_degree() {
         let result = Stl::params().seasonal_degree(2).fit(&generate_series(), 7);
-        let err = result.unwrap_err();
-        assert_eq!(err, Error::SeasonalDegree);
-        assert_eq!(err.to_string(), "seasonal_degree must be 0 or 1");
+        assert_eq!(
+            result.unwrap_err(),
+            Error::Parameter("seasonal_degree must be 0 or 1")
+        );
     }
 
     #[test]
     fn test_bad_trend_degree() {
         let result = Stl::params().trend_degree(2).fit(&generate_series(), 7);
-        let err = result.unwrap_err();
-        assert_eq!(err, Error::TrendDegree);
-        assert_eq!(err.to_string(), "trend_degree must be 0 or 1");
+        assert_eq!(
+            result.unwrap_err(),
+            Error::Parameter("trend_degree must be 0 or 1")
+        );
     }
 
     #[test]
     fn test_bad_low_pass_degree() {
         let result = Stl::params().low_pass_degree(2).fit(&generate_series(), 7);
-        let err = result.unwrap_err();
-        assert_eq!(err, Error::LowPassDegree);
-        assert_eq!(err.to_string(), "low_pass_degree must be 0 or 1");
+        assert_eq!(
+            result.unwrap_err(),
+            Error::Parameter("low_pass_degree must be 0 or 1")
+        );
     }
 
     #[test]

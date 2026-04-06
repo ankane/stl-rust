@@ -131,7 +131,7 @@ impl StlParams {
 
         // check before allocating
         if n / 2 < np {
-            return Err(Error::Series);
+            return Err(Error::Series("series has less than two periods"));
         }
         let np = np.max(2);
 
@@ -177,7 +177,7 @@ impl StlParams {
         let np = period;
 
         if n / 2 < np {
-            return Err(Error::Series);
+            return Err(Error::Series("series has less than two periods"));
         }
         let np = np.max(2);
 
@@ -199,7 +199,7 @@ impl StlParams {
         work: &mut [T],
     ) -> Result<(), Error> {
         if period < 2 {
-            return Err(Error::Period);
+            return Err(Error::Parameter("period must be at least 2"));
         }
 
         let newnp = period;
@@ -209,13 +209,13 @@ impl StlParams {
         let ildeg = self.ildeg.unwrap_or(itdeg);
 
         if isdeg != 0 && isdeg != 1 {
-            return Err(Error::SeasonalDegree);
+            return Err(Error::Parameter("seasonal_degree must be 0 or 1"));
         }
         if itdeg != 0 && itdeg != 1 {
-            return Err(Error::TrendDegree);
+            return Err(Error::Parameter("trend_degree must be 0 or 1"));
         }
         if ildeg != 0 && ildeg != 1 {
-            return Err(Error::LowPassDegree);
+            return Err(Error::Parameter("low_pass_degree must be 0 or 1"));
         }
 
         let mut newns = self.ns.unwrap_or(newnp).max(3);
