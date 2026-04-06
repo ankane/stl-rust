@@ -241,13 +241,13 @@ impl StlParams {
 
         let nsjump = self
             .nsjump
-            .unwrap_or_else(|| ceil((newns as f32) / 10.0) as usize);
+            .unwrap_or_else(|| ceil(newns as f32 / 10.0) as usize);
         let ntjump = self
             .ntjump
-            .unwrap_or_else(|| ceil((nt as f32) / 10.0) as usize);
+            .unwrap_or_else(|| ceil(nt as f32 / 10.0) as usize);
         let nljump = self
             .nljump
-            .unwrap_or_else(|| ceil((nl as f32) / 10.0) as usize);
+            .unwrap_or_else(|| ceil(nl as f32 / 10.0) as usize);
 
         debug_assert!(newnp >= 2);
         debug_assert!(newns % 2 == 1);
