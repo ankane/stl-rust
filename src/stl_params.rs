@@ -1,3 +1,4 @@
+use super::math::ceil;
 use super::stl_impl::stl;
 use super::{Error, Float};
 
@@ -6,14 +7,6 @@ use alloc::{vec, vec::Vec};
 
 #[cfg(feature = "alloc")]
 use super::StlResult;
-
-#[cfg(feature = "std")]
-fn ceil(x: f32) -> f32 {
-    x.ceil()
-}
-
-#[cfg(not(feature = "std"))]
-use core::f32::math::ceil;
 
 /// A set of STL parameters.
 #[derive(Clone, Debug)]
