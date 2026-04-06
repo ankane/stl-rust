@@ -7,7 +7,6 @@ extern crate alloc;
 
 mod error;
 mod float;
-mod math;
 mod stl;
 mod stl_impl;
 mod stl_params;

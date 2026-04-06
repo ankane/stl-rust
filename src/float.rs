@@ -1,4 +1,3 @@
-use crate::math;
 use core::iter::Sum;
 use core::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
@@ -55,20 +54,38 @@ impl Float for f32 {
         *self as f64
     }
 
+    #[cfg(feature = "std")]
     fn ln(&self) -> Self {
-        math::f32_ln(*self)
+        f32::ln(*self)
+    }
+
+    #[cfg(not(feature = "std"))]
+    fn ln(&self) -> Self {
+        todo!()
     }
 
     fn max(&self, x: Self) -> Self {
         f32::max(*self, x)
     }
 
+    #[cfg(feature = "std")]
     fn powf(&self, x: Self) -> Self {
-        math::f32_powf(*self, x)
+        f32::powf(*self, x)
     }
 
+    #[cfg(not(feature = "std"))]
+    fn powf(&self, _x: Self) -> Self {
+        todo!()
+    }
+
+    #[cfg(feature = "std")]
     fn sqrt(&self) -> Self {
-        math::f32_sqrt(*self)
+        f32::sqrt(*self)
+    }
+
+    #[cfg(not(feature = "std"))]
+    fn sqrt(&self) -> Self {
+        core::f32::math::sqrt(*self)
     }
 }
 
@@ -97,19 +114,37 @@ impl Float for f64 {
         *self
     }
 
+    #[cfg(feature = "std")]
     fn ln(&self) -> Self {
-        math::f64_ln(*self)
+        f64::ln(*self)
+    }
+
+    #[cfg(not(feature = "std"))]
+    fn ln(&self) -> Self {
+        todo!()
     }
 
     fn max(&self, x: Self) -> Self {
         f64::max(*self, x)
     }
 
+    #[cfg(feature = "std")]
     fn powf(&self, x: Self) -> Self {
-        math::f64_powf(*self, x)
+        f64::powf(*self, x)
     }
 
+    #[cfg(not(feature = "std"))]
+    fn powf(&self, _x: Self) -> Self {
+        todo!()
+    }
+
+    #[cfg(feature = "std")]
     fn sqrt(&self) -> Self {
-        math::f64_sqrt(*self)
+        f64::sqrt(*self)
+    }
+
+    #[cfg(not(feature = "std"))]
+    fn sqrt(&self) -> Self {
+        core::f64::math::sqrt(*self)
     }
 }
