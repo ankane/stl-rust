@@ -64,17 +64,17 @@ impl Float for f32 {
         todo!()
     }
 
-    fn max(&self, x: Self) -> Self {
-        f32::max(*self, x)
+    fn max(&self, other: Self) -> Self {
+        f32::max(*self, other)
     }
 
     #[cfg(feature = "std")]
-    fn powf(&self, x: Self) -> Self {
-        f32::powf(*self, x)
+    fn powf(&self, n: Self) -> Self {
+        f32::powf(*self, n)
     }
 
     #[cfg(not(feature = "std"))]
-    fn powf(&self, _x: Self) -> Self {
+    fn powf(&self, _n: Self) -> Self {
         todo!()
     }
 
@@ -124,17 +124,17 @@ impl Float for f64 {
         todo!()
     }
 
-    fn max(&self, x: Self) -> Self {
-        f64::max(*self, x)
+    fn max(&self, other: Self) -> Self {
+        f64::max(*self, other)
     }
 
     #[cfg(feature = "std")]
-    fn powf(&self, x: Self) -> Self {
-        f64::powf(*self, x)
+    fn powf(&self, n: Self) -> Self {
+        f64::powf(*self, n)
     }
 
     #[cfg(not(feature = "std"))]
-    fn powf(&self, _x: Self) -> Self {
+    fn powf(&self, _n: Self) -> Self {
         todo!()
     }
 
