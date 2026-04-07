@@ -3,7 +3,7 @@
 - Added support for `f64`
 - Added `alloc` and `std` features
 - Added experimental support for `no_std` (requires `nightly`)
-- Improved `Error` enum
+- Changed `Error` enum to use `&'static str` instead of `String`
 - Changed `seasonal_strength` and `trend_strength` methods to return `f64` instead of `f32`
 
 ## 0.3.1 (2024-07-10)
