@@ -1,6 +1,6 @@
 [package]
 name = "stlrs"
-version = "0.3.1"
+version = "0.4.0"
 description = "Seasonal-trend decomposition for Rust"
 repository = "https://github.com/ankane/stl-rust"
 license = "Unlicense OR MIT"

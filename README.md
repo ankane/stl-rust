@@ -11,7 +11,7 @@ Seasonal-trend decomposition for Rust
 Add this line to your application’s `Cargo.toml` under `[dependencies]`:
 
 ```toml
-stlrs = "0.3"
+stlrs = "0.4"
 ```
 
 ## Getting Started
