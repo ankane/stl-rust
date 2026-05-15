@@ -93,7 +93,7 @@ impl MstlParams {
             periods,
             self.iterate,
             self.lambda,
-            &self.swin,
+            self.swin.as_ref(),
             &self.stl_params,
             &mut seasonal,
             &mut trend,

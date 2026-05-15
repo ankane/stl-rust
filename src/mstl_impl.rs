@@ -12,7 +12,7 @@ pub fn mstl<T: Float>(
     seas_ids: &[usize],
     iterate: usize,
     lambda: Option<f32>,
-    swin: &Option<Vec<usize>>,
+    swin: Option<&Vec<usize>>,
     stl_params: &StlParams,
     seasonality: &mut [Vec<T>],
     trend: &mut [T],
